@@ -89,6 +89,7 @@
     background: linear-gradient(135deg, #1e6b4d 0%, #134e35 60%, #0d3a26 100%);
     border-radius: var(--radius-lg);
     padding: 18px;
+    padding-inline-end: 72px;
     color: white;
     box-shadow: var(--shadow-lg);
     position: relative; overflow: hidden;
@@ -101,14 +102,9 @@
       radial-gradient(circle at 10% 90%, rgba(232, 93, 4, 0.1) 0%, transparent 50%);
     pointer-events: none;
   }
-  .hero-row {
-    display: flex; align-items: center;
-    gap: 10px; flex-wrap: wrap;
-    position: relative; z-index: 1;
-  }
   .hero-title {
-    display: flex; align-items: center; gap: 10px;
-    flex: 1; min-width: 0;
+    display: flex; align-items: center; gap: 12px;
+    position: relative; z-index: 1;
   }
   .hero-title > div {
     min-width: 0; flex: 1;
@@ -119,13 +115,11 @@
     flex-shrink: 0;
   }
   .hero h1 {
-    font-size: clamp(18px, 5.4vw, 26px);
+    font-size: clamp(20px, 5.6vw, 26px);
     font-weight: 900;
     letter-spacing: -0.3px;
-    line-height: 1.1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.15;
+    word-break: keep-all;
   }
   .hero .subtitle {
     color: rgba(255, 255, 255, 0.78);
@@ -134,66 +128,73 @@
     margin-top: 3px;
     line-height: 1.35;
   }
-  .sync-status {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 11px; font-weight: 600;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    flex-shrink: 0;
-  }
-  .sync-status .sync-text { display: none; }
-  @media (min-width: 420px) {
-    .sync-status .sync-text { display: inline; }
-  }
-  .sync-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: #10b981;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
-    animation: pulse 2s infinite;
-  }
-  .sync-dot.offline { background: #ef4444; animation: none; }
   @keyframes pulse {
     0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
-    70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
     100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
   }
 
-  /* ───────── Hero corner avatar (Gmail-style) ───────── */
-  .me-avatar-wrap { position: relative; flex-shrink: 0; }
+  /* ───────── Hero corner avatar (premium) ───────── */
+  .me-avatar-wrap {
+    position: absolute;
+    top: 14px;
+    inset-inline-end: 14px;
+    z-index: 4;
+  }
   .me-avatar {
-    width: 36px; height: 36px;
+    width: 42px; height: 42px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.35);
-    background: rgba(255, 255, 255, 0.16);
+    border: 0;
+    background: rgba(255, 255, 255, 0.10);
     color: #fff;
-    font-weight: 800; font-size: 14px;
+    font-weight: 800; font-size: 15px;
     display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer;
-    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    box-shadow:
+      0 0 0 2.5px #ffffff,
+      0 6px 16px rgba(0, 0, 0, 0.35),
+      0 1px 3px rgba(0, 0, 0, 0.18);
+    transition: transform 0.15s, box-shadow 0.15s;
     -webkit-tap-highlight-color: transparent;
     text-transform: uppercase;
     letter-spacing: 0;
+    position: relative;
   }
-  .me-avatar:hover { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25); }
+  .me-avatar:hover {
+    box-shadow:
+      0 0 0 2.5px #ffffff,
+      0 8px 22px rgba(0, 0, 0, 0.45),
+      0 1px 3px rgba(0, 0, 0, 0.18);
+  }
   .me-avatar:active { transform: scale(0.94); }
   .me-avatar[data-family="avidan"]  { background: var(--avidan); }
   .me-avatar[data-family="afsoa"]   { background: var(--afsoa); }
   .me-avatar[data-family="weizman"] { background: var(--weizman); }
   .me-avatar[data-family="sofer"]   { background: var(--sofer); }
+  .me-avatar-status {
+    position: absolute;
+    bottom: -2px;
+    inset-inline-end: -2px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 2.5px #ffffff;
+    transition: background 0.2s;
+  }
+  .me-avatar-status.live { animation: pulse 2.4s infinite; }
+  .me-avatar-status.offline { background: #ef4444; animation: none; }
+  .me-avatar-status.connecting { background: #f59e0b; animation: none; }
+
   .me-popover {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 10px);
     inset-inline-end: 0;
     background: #fff;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
-    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
-    padding: 12px;
-    min-width: 200px;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.22), 0 2px 6px rgba(15, 23, 42, 0.08);
+    padding: 14px;
+    min-width: 224px;
     z-index: 60;
     display: none;
     color: var(--ink);
@@ -201,7 +202,7 @@
   }
   .me-popover.open { display: block; animation: fadeIn 0.18s ease; }
   .me-popover .me-pop-name {
-    font-size: 13px; font-weight: 700;
+    font-size: 13.5px; font-weight: 800;
     color: var(--ink);
     display: flex; align-items: center; gap: 8px;
     padding-bottom: 10px;
@@ -216,6 +217,23 @@
   .me-popover[data-family="afsoa"]   .me-pop-dot { background: var(--afsoa); }
   .me-popover[data-family="weizman"] .me-pop-dot { background: var(--weizman); }
   .me-popover[data-family="sofer"]   .me-pop-dot { background: var(--sofer); }
+  .me-pop-sync {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+  }
+  .me-pop-sync-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981;
+    flex-shrink: 0;
+  }
+  .me-pop-sync-dot.offline { background: #ef4444; }
+  .me-pop-sync-dot.connecting { background: #f59e0b; }
   .me-popover .me-pop-logout {
     width: 100%;
     background: #fff;
@@ -588,31 +606,19 @@
     font-variant-numeric: tabular-nums;
   }
   .byfam-card-body {
-    padding: 8px 10px 10px;
+    padding: 12px;
   }
-  .byfam-cat {
-    margin-top: 8px;
-  }
-  .byfam-cat:first-child { margin-top: 0; }
-  .byfam-cat-head {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; font-weight: 700;
-    color: var(--ink-soft);
-    margin-bottom: 4px;
-    text-transform: uppercase; letter-spacing: 0.4px;
-  }
-  .byfam-cat-emoji { font-size: 13px; }
   .byfam-items {
     display: flex; flex-wrap: wrap;
-    gap: 4px 6px;
+    gap: 6px 8px;
   }
   .byfam-item {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 5px 12px;
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 999px;
-    font-size: 12px; font-weight: 600;
+    font-size: 12.5px; font-weight: 600;
     color: var(--ink);
   }
   .byfam-empty {
@@ -648,45 +654,95 @@
     text-decoration: line-through;
     color: var(--ink-dim);
   }
-  .item-claims {
-    display: flex; gap: 4px; flex-wrap: wrap; align-items: center;
+  .assignees {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
   }
-  .claim-chip {
-    padding: 5px 10px;
-    min-height: 30px;
-    border-radius: 999px;
-    font-size: 11px; font-weight: 700;
-    color: white;
-    display: inline-flex; align-items: center; gap: 4px;
-    cursor: pointer; transition: all 0.15s;
+  .assignee-empty-hint {
+    font-size: 11px;
+    font-style: italic;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    letter-spacing: 0.1px;
+    user-select: none;
+  }
+  .assignee-stack {
+    display: inline-flex;
+    align-items: center;
+  }
+  .assignee-stack:empty { display: none; }
+  .assignee-avatar {
+    position: relative;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px; font-weight: 800;
+    letter-spacing: 0.2px;
+    background: var(--ink-dim);
+    box-shadow:
+      0 0 0 2px var(--card),
+      0 1px 3px rgba(15, 23, 42, 0.18);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  .claim-chip:hover { opacity: 0.9; }
-  .claim-chip:active { transform: scale(0.94); }
-  .claim-chip.avidan { background: var(--avidan); }
-  .claim-chip.afsoa { background: var(--afsoa); }
-  .claim-chip.weizman { background: var(--weizman); }
-  .claim-chip.sofer { background: var(--sofer); }
-  .claim-chip .x { opacity: 0.85; font-size: 13px; line-height: 1; }
-  .btn-claim {
-    padding: 7px 14px;
-    min-height: 32px;
+  .assignee-avatar + .assignee-avatar {
+    margin-inline-start: -10px;
+  }
+  .assignee-avatar[data-family="avidan"]  { background: linear-gradient(135deg, #60a5fa, var(--avidan)); }
+  .assignee-avatar[data-family="afsoa"]   { background: linear-gradient(135deg, #c084fc, var(--afsoa)); }
+  .assignee-avatar[data-family="weizman"] { background: linear-gradient(135deg, #34d399, var(--weizman)); }
+  .assignee-avatar[data-family="sofer"]   { background: linear-gradient(135deg, #f87171, var(--sofer)); }
+  .assignee-avatar:hover {
+    transform: translateY(-2px);
+    z-index: 20 !important;
+    box-shadow:
+      0 0 0 2px var(--card),
+      0 6px 14px rgba(15, 23, 42, 0.22);
+  }
+  .assignee-avatar:active { transform: translateY(0) scale(0.94); filter: brightness(0.95); }
+  .assignee-avatar.is-me {
+    box-shadow:
+      0 0 0 2px var(--card),
+      0 0 0 3.5px rgba(34, 84, 61, 0.32),
+      0 2px 6px rgba(15, 23, 42, 0.22);
+  }
+  .assignee-avatar.is-me:hover {
+    box-shadow:
+      0 0 0 2px var(--card),
+      0 0 0 3.5px rgba(34, 84, 61, 0.45),
+      0 6px 14px rgba(15, 23, 42, 0.25);
+  }
+  .assignee-add {
+    width: 30px; height: 30px;
+    border-radius: 50%;
     border: 1.5px dashed var(--line-strong);
-    border-radius: 999px;
     background: transparent;
     color: var(--ink-soft);
-    font-family: inherit; font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease, transform 0.15s ease;
     -webkit-tap-highlight-color: transparent;
+    margin-inline-start: 2px;
+    flex-shrink: 0;
   }
-  .btn-claim:hover { border-style: solid; color: var(--forest); border-color: var(--forest); }
-  .btn-claim:active { transform: scale(0.96); }
-  .btn-claim.claimed { background: #d1fae5; color: #065f46; border: 1.5px solid #10b981; }
-  .btn-claim.claimed-avidan  { background: var(--avidan);  color: #fff; border-color: var(--avidan); }
-  .btn-claim.claimed-afsoa   { background: var(--afsoa);   color: #fff; border-color: var(--afsoa); }
-  .btn-claim.claimed-weizman { background: var(--weizman); color: #fff; border-color: var(--weizman); }
-  .btn-claim.claimed-sofer   { background: var(--sofer);   color: #fff; border-color: var(--sofer); }
-  .btn-claim.claimed:hover { filter: brightness(0.95); }
+  .assignee-add-plus {
+    font-size: 18px; line-height: 1; font-weight: 600;
+    margin-top: -2px;
+  }
+  .assignee-add:hover {
+    border-style: solid;
+    border-color: var(--forest);
+    color: var(--forest);
+    background: rgba(34, 84, 61, 0.06);
+  }
+  .assignee-add:active { transform: scale(0.92); }
   .btn-icon {
     width: 36px; height: 36px;
     border: none; background: transparent;
@@ -850,12 +906,22 @@
     border-right: 3px solid var(--forest);
   }
   .category-header .cat-emoji { font-size: 18px; }
+  .category-header .cat-label { flex: 0 1 auto; }
   .category-header .cat-count {
-    margin-right: auto;
+    margin-inline-start: auto;
     font-size: 11px; color: white; font-weight: 700;
     background: var(--forest);
     padding: 3px 9px; border-radius: 999px;
     min-width: 22px; text-align: center;
+    flex-shrink: 0;
+  }
+  .category-header .cat-count-warn {
+    margin-inline-start: 0;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    font-size: 10.5px;
+    padding: 3px 8px;
+    box-shadow: 0 1px 3px rgba(217, 119, 6, 0.35);
   }
   .category-empty {
     padding: 4px 12px 10px;
@@ -1329,15 +1395,14 @@
         calc(28px + var(--safe-bot))
         calc(28px + var(--safe-l));
     }
-    .hero { padding: 36px 40px; margin-bottom: 24px; }
-    .hero-row { flex-wrap: nowrap; align-items: flex-end; justify-content: space-between; gap: 24px; }
-    .hero-title { gap: 14px; flex: 0 1 auto; }
+    .hero { padding: 36px 40px; padding-inline-end: 96px; margin-bottom: 24px; }
+    .hero-title { gap: 14px; }
     .hero-icon { font-size: 48px; }
     .hero h1 { font-size: 38px; letter-spacing: -0.5px; }
     .hero .subtitle { font-size: 16px; margin-top: 4px; }
-    .sync-status { padding: 10px 16px; font-size: 14px; }
-    .sync-dot { width: 8px; height: 8px; }
-    .me-avatar { width: 44px; height: 44px; font-size: 16px; }
+    .me-avatar-wrap { top: 28px; inset-inline-end: 28px; }
+    .me-avatar { width: 52px; height: 52px; font-size: 18px; }
+    .me-avatar-status { width: 14px; height: 14px; }
     .btn-logout { padding: 7px 16px; font-size: 13px; min-height: 36px; }
 
     .trip-info { padding: 14px 18px; margin-bottom: 18px; }
@@ -1460,27 +1525,28 @@
 <div class="app" id="app" style="display:none;">
   <!-- Hero -->
   <header class="hero">
-    <div class="hero-row">
-      <div class="hero-title">
-        <div class="hero-icon">🏕️</div>
-        <div>
-          <h1>קמפינג 2026</h1>
-          <div class="subtitle">מתכנסים יום שישי ב־18:00</div>
-        </div>
+    <div class="hero-title">
+      <div class="hero-icon">🏕️</div>
+      <div>
+        <h1>קמפינג 2026</h1>
+        <div class="subtitle">מתכנסים יום שישי ב־18:00</div>
       </div>
-      <div class="sync-status" id="syncStatus">
-        <div class="sync-dot offline" id="syncDot"></div>
-        <span class="sync-text" id="syncText">מתחבר...</span>
-      </div>
-      <div class="me-avatar-wrap">
-        <button class="me-avatar" id="meAvatar" type="button" data-family="" aria-haspopup="dialog" aria-expanded="false" title="החשבון שלי">–</button>
-        <div class="me-popover" id="mePopover" data-family="" role="dialog" aria-label="חשבון">
-          <div class="me-pop-name">
-            <span class="me-pop-dot"></span>
-            <span id="mePopName">—</span>
-          </div>
-          <button class="me-pop-logout" id="mePopLogout" type="button">התנתק</button>
+    </div>
+    <div class="me-avatar-wrap">
+      <button class="me-avatar" id="meAvatar" type="button" data-family="" aria-haspopup="dialog" aria-expanded="false" title="החשבון שלי">
+        <span class="me-avatar-initial" id="meAvatarInitial">–</span>
+        <span class="me-avatar-status connecting" id="meAvatarStatus" aria-hidden="true"></span>
+      </button>
+      <div class="me-popover" id="mePopover" data-family="" role="dialog" aria-label="חשבון">
+        <div class="me-pop-name">
+          <span class="me-pop-dot"></span>
+          <span id="mePopName">—</span>
         </div>
+        <div class="me-pop-sync" id="syncStatus">
+          <span class="me-pop-sync-dot connecting" id="syncDot"></span>
+          <span id="syncText">מתחבר...</span>
+        </div>
+        <button class="me-pop-logout" id="mePopLogout" type="button">התנתק</button>
       </div>
     </div>
     <div class="countdown" id="countdown" aria-label="ספירה לאחור עד ההתכנסות">
@@ -2486,12 +2552,13 @@
     const avatar = $('meAvatar');
     const popover = $('mePopover');
     const popName = $('mePopName');
+    const initial = $('meAvatarInitial');
     if (!avatar || !popover) return;
     const fam = currentFamily || '';
     avatar.dataset.family = fam;
     popover.dataset.family = fam;
     const short = fam && FAMILIES[fam] ? FAMILIES[fam].short : '–';
-    avatar.textContent = short ? short.charAt(0) : '–';
+    if (initial) initial.textContent = short ? short.charAt(0) : '–';
     avatar.setAttribute('aria-label', fam && FAMILIES[fam] ? `החשבון שלי — ${FAMILIES[fam].label}` : 'החשבון שלי');
     if (popName) popName.textContent = fam && FAMILIES[fam] ? FAMILIES[fam].label : '—';
   }
@@ -2505,30 +2572,13 @@
     const html = Object.values(FAMILIES).map(fam => {
       const famItems = sharedEntries.filter(([, item]) => item.claims?.[fam.id]);
       const total = famItems.length;
-      const byCat = {};
-      for (const cat of CATEGORIES) byCat[cat.id] = [];
-      for (const [, item] of famItems) {
-        const cat = CATEGORY_BY_ID[item.category] ? item.category : DEFAULT_CATEGORY;
-        byCat[cat].push(item);
-      }
       const initial = fam.short ? fam.short.charAt(0) : '?';
       const body = total
-        ? CATEGORIES.map(cat => {
-            const items = byCat[cat.id];
-            if (!items.length) return '';
-            const pills = items
-              .map(it => `<span class="byfam-item">${escapeHtml(it.name || '')}</span>`)
-              .join('');
-            return `
-              <div class="byfam-cat">
-                <div class="byfam-cat-head">
-                  <span class="byfam-cat-emoji">${cat.emoji}</span>
-                  <span>${escapeHtml(cat.label)}</span>
-                </div>
-                <div class="byfam-items">${pills}</div>
-              </div>
-            `;
-          }).join('')
+        ? `<div class="byfam-items">${
+            famItems
+              .map(([, it]) => `<span class="byfam-item">${escapeHtml(it.name || '')}</span>`)
+              .join('')
+          }</div>`
         : '<div class="byfam-empty">עדיין לא נבחרו פריטים</div>';
       return `
         <div class="byfam-card">
@@ -2594,15 +2644,20 @@
       }
       list.innerHTML = CATEGORIES.map(cat => {
         const rows = byCategory[cat.id];
+        const unassigned = rows.filter(([, it]) => !it.claims || !Object.keys(it.claims).length).length;
         const body = rows.length
           ? rows.map(([id, item]) => sharedItemHtml(id, item)).join('')
           : `<div class="category-empty" data-empty>גררו לכאן פריטים או הוסיפו חדשים</div>`;
+        const unassignedBadge = unassigned > 0
+          ? `<span class="cat-count cat-count-warn" title="פריטים שעוד לא שובצו">${unassigned} ללא שיוך</span>`
+          : '';
         return `
           <div class="category-section" data-category="${cat.id}">
             <div class="category-header">
               <span class="cat-emoji">${cat.emoji}</span>
-              <span>${escapeHtml(cat.label)}</span>
+              <span class="cat-label">${escapeHtml(cat.label)}</span>
               <span class="cat-count">${rows.length}</span>
+              ${unassignedBadge}
             </div>
             <div class="category-body" data-category-body="${cat.id}">${body}</div>
           </div>
@@ -2666,26 +2721,54 @@
 
   function sharedItemHtml(id, item) {
     const claims = item.claims || {};
-    // Show chips for OTHER families only — the "אני מביא" button already conveys current user's claim
-    const claimChips = Object.keys(claims).filter(fam => fam !== currentFamily).map(fam => `
-      <span class="claim-chip ${fam}" data-claim-remove data-item-id="${id}" data-family="${fam}" title="לחצו להסרה">
-        ${escapeHtml(FAMILIES[fam]?.short || fam)}
-        <span class="x">×</span>
-      </span>
-    `).join('');
-    const myClaim = claims[currentFamily];
-    const myShort = FAMILIES[currentFamily]?.short || 'אני מביא';
-    const claimBtn = `
-      <button class="btn-claim ${myClaim ? 'claimed' : ''} ${myClaim ? 'claimed-' + currentFamily : ''}" data-claim-toggle data-item-id="${id}" title="${myClaim ? 'בטל את השיבוץ שלך' : 'אני אביא את הפריט'}">
-        ${myClaim ? '✓ ' + escapeHtml(myShort) : '+ אני מביא'}
-      </button>
-    `;
+    const claimedFamilies = Object.keys(claims).filter(f => FAMILIES[f]);
+    const myClaim = !!claims[currentFamily];
+    const claimedCount = claimedFamilies.length;
+
+    // Order avatars: current user first (rightmost in RTL stack), then others
+    const ordered = [
+      ...(myClaim ? [currentFamily] : []),
+      ...claimedFamilies.filter(f => f !== currentFamily),
+    ];
+
+    const avatars = ordered.map((fam, i) => {
+      const f = FAMILIES[fam];
+      const initial = f?.short ? f.short.charAt(0) : '?';
+      const isMe = fam === currentFamily;
+      const title = isMe
+        ? `שובצת לפריט (${escapeHtml(f.label)}) — לחצו להסרה`
+        : `שובץ ע"י ${escapeHtml(f.label)} — לחצו להסרה`;
+      return `
+        <button class="assignee-avatar ${isMe ? 'is-me' : ''}"
+                data-family="${fam}"
+                data-claim-remove data-item-id="${id}"
+                style="z-index:${10 - i}"
+                title="${title}"
+                aria-label="${title}">
+          ${escapeHtml(initial)}
+        </button>
+      `;
+    }).join('');
+
+    const addBtn = !myClaim && currentFamily
+      ? `<button class="assignee-add" data-claim-toggle data-item-id="${id}" title="אני אביא את הפריט" aria-label="אני אביא את הפריט">
+           <span class="assignee-add-plus">+</span>
+         </button>`
+      : '';
+
+    const emptyHint = !claimedCount
+      ? `<span class="assignee-empty-hint">לא שובץ</span>`
+      : '';
+
     return `
       <div class="item-row" data-id="${id}">
         <span class="drag-handle" title="גררו כדי להעביר קטגוריה">⋮⋮</span>
         <div class="item-name">${escapeHtml(item.name)}</div>
-        <div class="item-claims">${claimChips}</div>
-        ${claimBtn}
+        <div class="assignees" data-claim-count="${claimedCount}">
+          ${emptyHint}
+          <div class="assignee-stack">${avatars}</div>
+          ${addBtn}
+        </div>
         <button class="btn-icon btn-icon-menu" data-shared-menu data-id="${id}" title="פעולות נוספות" aria-label="פעולות נוספות">⋯</button>
       </div>
     `;
@@ -2891,8 +2974,19 @@
 
   // ─── Sync status ───
   function setSyncStatus(text, online) {
-    $('syncText').textContent = text;
-    $('syncDot').classList.toggle('offline', !online);
+    const txtEl = $('syncText');
+    const popDot = $('syncDot');
+    const avDot = $('meAvatarStatus');
+    if (txtEl) txtEl.textContent = text;
+    const cls = online === true ? 'live' : (online === false ? 'offline' : 'connecting');
+    if (popDot) {
+      popDot.classList.remove('live', 'offline', 'connecting');
+      popDot.classList.add(cls);
+    }
+    if (avDot) {
+      avDot.classList.remove('live', 'offline', 'connecting');
+      avDot.classList.add(cls);
+    }
   }
 
   // ─── Realtime subscription ───
