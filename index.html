@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 <style>
   :root {
     --bg-1: #f5efe6;
@@ -285,6 +286,65 @@
     font-size: 16px;
   }
   .btn-icon:hover { background: #fee2e2; color: #b91c1c; }
+  .btn-icon-edit:hover { background: #dbeafe; color: #1d4ed8; }
+  .btn-icon-dup:hover { background: #fef3c7; color: #b45309; }
+
+  /* Drag handle for category reordering */
+  .drag-handle {
+    flex-shrink: 0;
+    width: 22px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-dim);
+    font-size: 16px; line-height: 1;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .drag-handle:hover { background: rgba(31, 41, 55, 0.05); color: var(--forest); }
+  .drag-handle:active { cursor: grabbing; }
+
+  /* Sortable visuals */
+  .sortable-ghost {
+    opacity: 0.4;
+    background: rgba(30, 107, 77, 0.12);
+    border-radius: var(--radius-md);
+  }
+  .sortable-chosen { background: rgba(30, 107, 77, 0.06); }
+  .sortable-drag {
+    box-shadow: var(--shadow-lg);
+    background: white;
+    border-radius: var(--radius-md);
+  }
+  .category-section.drop-hint {
+    background: rgba(30, 107, 77, 0.05);
+    border-radius: var(--radius-md);
+  }
+
+  /* Category pill (for claimed shared items in personal view) */
+  .cat-pill {
+    flex-shrink: 0;
+    font-size: 11px; font-weight: 600;
+    color: var(--ink-soft);
+    background: rgba(31, 41, 55, 0.06);
+    padding: 3px 10px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 4px;
+    white-space: nowrap;
+  }
+
+  /* Personal panel sub-sections */
+  .personal-section + .personal-section {
+    margin-top: 8px;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
+  .check-row[data-kind="packed"] {
+    background: rgba(30, 107, 77, 0.025);
+  }
+  .check-row[data-kind="packed"]:hover {
+    background: rgba(30, 107, 77, 0.06);
+  }
 
   /* Personal item row (with checkbox) */
   .check-row {
@@ -661,7 +721,8 @@
       <div class="list-items" id="sharedList"></div>
       <div class="add-row">
         <input class="add-input" id="sharedAddInput" placeholder="הוסיפו רעיון חדש לרשימה המשותפת..." />
-        <select class="add-select" id="sharedAddCategory">
+        <select class="add-select" id="sharedAddCategory" title="קטגוריה (ברירת מחדל: זיהוי אוטומטי)">
+          <option value="">🤖 קטגוריה אוטומטית</option>
           <option value="general">🎒 ציוד כללי</option>
           <option value="breakfast">🍳 ארוחת בוקר</option>
           <option value="dinner">🍔 ארוחת ערב</option>
@@ -717,6 +778,40 @@
   ];
   const CATEGORY_BY_ID = Object.fromEntries(CATEGORIES.map(c => [c.id, c]));
   const DEFAULT_CATEGORY = 'general';
+
+  // Keyword-based classifier — first matching rule wins
+  const CLASSIFY_RULES = [
+    { cat: 'breakfast', keywords: [
+      'חביתה','חביתות','ביצים','ביצה','יוגורט','קוטג','חלב','גבינ','קורנפלקס',
+      'דגנים','שוקו','קפה','תה ','ממרח','שוקולד','חלה','פרוסת','טוסט','דבש',
+      'ריבה','גרנולה','שיבולת','נוטלה','נוטלא','אבוקדו','בורקס','קרואסון',
+      'בוקר','בייגל','מאפה','מאפים'
+    ]},
+    { cat: 'dinner', keywords: [
+      'בשר','המבורגר','נקניק','פרגי','שניצל','כבד','מנגל','פחמ','קבב',
+      'אנטריקוט','סטייק','בורגר','רטב','קטשופ','מיונז','חרדל','כנפי',
+      'אש','גריל','צלי','שיפוד','שיפודים','בצל','עגבני','מלפפון','חסה',
+      'ירקות','סלט','סלטים','פיתה','פיתות','חומוס','טחינה','לחמני','ערב',
+      'דג','דגים','סלמון'
+    ]},
+    { cat: 'general', keywords: [
+      'אוהל','מזרן','שמיכ','שק שינה','שולחן','כסא','כיסא','פנס','פנסים',
+      'גזיה','גז ','מחבת','סיר','סירים','שמן','שקיות','זבל','חד״פ','חדפ',
+      'חד"פ','צלחות','כוסות','סכו','כלים','אלתוש','סטיק','זוהר','בירה',
+      'משקה','מים','שתיה','שתייה','קולה','מצית','גפרור','גפרורים','כלי',
+      'נייר','מגבונים','חבל','פטיש','יתד','יתדות','ערכת','עזרה ראשונה'
+    ]},
+  ];
+
+  function classifyItem(name) {
+    const text = String(name || '');
+    for (const rule of CLASSIFY_RULES) {
+      for (const kw of rule.keywords) {
+        if (text.includes(kw)) return rule.cat;
+      }
+    }
+    return null;
+  }
 
   const SEED_SHARED = [
     { name: 'מנגל ופחמים', category: 'dinner' },
@@ -858,11 +953,18 @@
     }
   }
 
-  function addSharedItem(name, category) {
+  function addSharedItem(name, categoryHint) {
     const id = 'sh_' + Math.random().toString(36).slice(2, 9);
-    const cat = CATEGORY_BY_ID[category] ? category : DEFAULT_CATEGORY;
+    let cat;
+    if (categoryHint && CATEGORY_BY_ID[categoryHint]) cat = categoryHint;
+    else cat = classifyItem(name) || DEFAULT_CATEGORY;
     return mutate('shared', (s) => {
-      s[id] = { name, category: cat, claims: {}, addedBy: currentFamily || 'guest', addedAt: Date.now() };
+      s[id] = {
+        name, category: cat, claims: {}, packed: {},
+        classifiedAt: Date.now(),
+        addedBy: currentFamily || 'guest',
+        addedAt: Date.now(),
+      };
     });
   }
 
@@ -873,7 +975,39 @@
   function setSharedCategory(id, category) {
     const cat = CATEGORY_BY_ID[category] ? category : DEFAULT_CATEGORY;
     return mutate('shared', (s) => {
-      if (s[id]) s[id].category = cat;
+      if (s[id]) {
+        s[id].category = cat;
+        s[id].classifiedAt = Date.now();
+      }
+    });
+  }
+
+  function editSharedItem(id) {
+    const item = state.shared?.[id];
+    if (!item) return;
+    const next = prompt('שם חדש לפריט:', item.name);
+    if (next == null) return;
+    const trimmed = next.trim();
+    if (!trimmed || trimmed === item.name) return;
+    return mutate('shared', (s) => {
+      if (s[id]) s[id].name = trimmed;
+    });
+  }
+
+  function duplicateSharedItem(id) {
+    const orig = state.shared?.[id];
+    if (!orig) return;
+    const newId = 'sh_' + Math.random().toString(36).slice(2, 9);
+    return mutate('shared', (s) => {
+      s[newId] = {
+        name: orig.name,
+        category: orig.category || DEFAULT_CATEGORY,
+        claims: {},
+        packed: {},
+        classifiedAt: Date.now(),
+        addedBy: currentFamily || 'guest',
+        addedAt: (orig.addedAt || Date.now()) + 1,
+      };
     });
   }
 
@@ -884,9 +1018,20 @@
       if (!item.claims) item.claims = {};
       if (item.claims[family]) {
         delete item.claims[family];
+        if (item.packed) delete item.packed[family];
       } else {
         item.claims[family] = { at: Date.now() };
       }
+    });
+  }
+
+  function togglePackedShared(itemId, family) {
+    return mutate('shared', (s) => {
+      const item = s[itemId];
+      if (!item) return;
+      if (!item.packed) item.packed = {};
+      if (item.packed[family]) delete item.packed[family];
+      else item.packed[family] = { at: Date.now() };
     });
   }
 
@@ -904,12 +1049,44 @@
     });
   }
 
+  function editPersonalItem(family, id) {
+    const item = state.personal?.[family]?.[id];
+    if (!item) return;
+    const next = prompt('שם חדש לפריט:', item.name);
+    if (next == null) return;
+    const trimmed = next.trim();
+    if (!trimmed || trimmed === item.name) return;
+    return mutate('personal', (p) => {
+      if (p[family]?.[id]) p[family][id].name = trimmed;
+    });
+  }
+
   function togglePersonalChecked(family, id) {
     return mutate('personal', (p) => {
       const item = p[family]?.[id];
       if (!item) return;
       item.checked = !item.checked;
     });
+  }
+
+  // One-time migration: classify any pre-existing items lacking a classifiedAt flag.
+  // Idempotent and multi-client safe — once an item has the flag we never touch it again.
+  async function migrateClassifications() {
+    let changed = false;
+    for (const [id, item] of Object.entries(state.shared || {})) {
+      if (item.classifiedAt) continue;
+      const guess = classifyItem(item.name);
+      if (guess && guess !== item.category) {
+        item.category = guess;
+        changed = true;
+      }
+      item.classifiedAt = Date.now();
+      changed = true;
+    }
+    if (changed) {
+      try { await writeKey('shared', state.shared); }
+      catch (e) { console.error('migration write failed', e); }
+    }
   }
 
   // ─── Render ───
@@ -927,9 +1104,15 @@
     $('meName').textContent = currentFamily ? FAMILIES[currentFamily].label : '—';
   }
 
+  let sharedSortables = [];
+
   function renderShared() {
     const list = $('sharedList');
     const allItems = Object.entries(state.shared || {}).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
+
+    // Tear down any prior Sortable instances before rebuilding the DOM
+    sharedSortables.forEach(s => { try { s.destroy(); } catch {} });
+    sharedSortables = [];
 
     if (!allItems.length) {
       list.innerHTML = '<div class="empty">אין עדיין פריטים — הוסיפו את הראשון 🍔</div>';
@@ -944,7 +1127,7 @@
         const rows = byCategory[cat.id];
         const body = rows.length
           ? rows.map(([id, item]) => sharedItemHtml(id, item)).join('')
-          : `<div class="category-empty">אין כאן פריטים עדיין</div>`;
+          : `<div class="category-empty" data-empty>גררו לכאן פריטים או הוסיפו חדשים</div>`;
         return `
           <div class="category-section" data-category="${cat.id}">
             <div class="category-header">
@@ -952,7 +1135,7 @@
               <span>${escapeHtml(cat.label)}</span>
               <span class="cat-count">${rows.length}</span>
             </div>
-            ${body}
+            <div class="category-body" data-category-body="${cat.id}">${body}</div>
           </div>
         `;
       }).join('');
@@ -977,11 +1160,43 @@
         if (confirm('למחוק את הפריט?')) deleteSharedItem(btn.dataset.id);
       });
     });
-    list.querySelectorAll('[data-cat-select]').forEach(sel => {
-      sel.addEventListener('change', (e) => {
-        setSharedCategory(sel.dataset.id, sel.value);
-      });
+    list.querySelectorAll('[data-edit-shared]').forEach(btn => {
+      btn.addEventListener('click', () => editSharedItem(btn.dataset.id));
     });
+    list.querySelectorAll('[data-dup-shared]').forEach(btn => {
+      btn.addEventListener('click', () => duplicateSharedItem(btn.dataset.id));
+    });
+
+    // Init Sortable on each category body — drag between categories changes the item's category.
+    if (typeof Sortable !== 'undefined') {
+      list.querySelectorAll('[data-category-body]').forEach(body => {
+        const inst = Sortable.create(body, {
+          group: 'camping-shared',
+          handle: '.drag-handle',
+          animation: 180,
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'sortable-drag',
+          forceFallback: true,
+          fallbackOnBody: true,
+          delay: 0,
+          delayOnTouchOnly: true,
+          touchStartThreshold: 5,
+          onAdd: (evt) => {
+            // Drop into an empty category — remove the placeholder if present.
+            const targetBody = evt.to;
+            const placeholder = targetBody.querySelector('[data-empty]');
+            if (placeholder) placeholder.remove();
+          },
+          onEnd: (evt) => {
+            const id = evt.item.dataset.id;
+            const newCat = evt.to.dataset.categoryBody;
+            if (id && newCat) setSharedCategory(id, newCat);
+          },
+        });
+        sharedSortables.push(inst);
+      });
+    }
   }
 
   function sharedItemHtml(id, item) {
@@ -998,16 +1213,14 @@
         ${myClaim ? '✓ אני מביא' : '+ אני מביא'}
       </button>
     `;
-    const currentCat = CATEGORY_BY_ID[item.category] ? item.category : DEFAULT_CATEGORY;
-    const catOptions = CATEGORIES.map(c => `
-      <option value="${c.id}" ${c.id === currentCat ? 'selected' : ''}>${c.emoji} ${escapeHtml(c.label)}</option>
-    `).join('');
     return `
-      <div class="item-row">
+      <div class="item-row" data-id="${id}">
+        <span class="drag-handle" title="גררו כדי להעביר קטגוריה">⋮⋮</span>
         <div class="item-name">${escapeHtml(item.name)}</div>
         <div class="item-claims">${claimChips}</div>
         ${claimBtn}
-        <select class="cat-select" data-cat-select data-id="${id}" title="שינוי קטגוריה">${catOptions}</select>
+        <button class="btn-icon btn-icon-edit" data-edit-shared data-id="${id}" title="ערוך שם">✏️</button>
+        <button class="btn-icon btn-icon-dup" data-dup-shared data-id="${id}" title="שכפל פריט">📋</button>
         <button class="btn-icon" data-delete-shared data-id="${id}" title="מחק">🗑</button>
       </div>
     `;
@@ -1023,26 +1236,82 @@
       return;
     }
     const familyItems = state.personal?.[fam] || {};
-    const items = Object.entries(familyItems).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
-    $('personalTitle').innerHTML = `🎒 ציוד אישי — ${escapeHtml(FAMILIES[fam].label)}`;
-    $('personalCount').textContent = items.length + ' פריטים';
+    const personalItems = Object.entries(familyItems).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
 
-    if (!items.length) {
+    // Mirror: any shared item this family has claimed shows up here as a packing reminder
+    const claimedShared = Object.entries(state.shared || {})
+      .filter(([, item]) => item.claims?.[fam])
+      .sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
+
+    const totalCount = personalItems.length + claimedShared.length;
+    $('personalTitle').innerHTML = `🎒 ציוד אישי — ${escapeHtml(FAMILIES[fam].label)}`;
+    $('personalCount').textContent = totalCount + ' פריטים';
+
+    if (!totalCount) {
       list.innerHTML = '<div class="empty">אין עדיין פריטים — הוסיפו את הראשון 🎒</div>';
-    } else {
-      list.innerHTML = items.map(([id, item]) => `
-        <div class="check-row" data-checked="${item.checked ? 'true' : 'false'}" data-id="${id}">
-          <div class="checkbox"></div>
-          <div class="item-name ${item.checked ? 'checked' : ''}">${escapeHtml(item.name)}</div>
-          <button class="btn-icon" data-delete-personal data-id="${id}" title="מחק">🗑</button>
-        </div>
-      `).join('');
+      return;
     }
 
-    list.querySelectorAll('.check-row').forEach(row => {
+    const personalSection = `
+      <div class="personal-section">
+        <div class="category-header">
+          <span class="cat-emoji">🎒</span>
+          <span>הציוד האישי שלי</span>
+          <span class="cat-count">${personalItems.length}</span>
+        </div>
+        ${personalItems.length
+          ? personalItems.map(([id, item]) => `
+            <div class="check-row" data-kind="personal" data-checked="${item.checked ? 'true' : 'false'}" data-id="${id}">
+              <div class="checkbox"></div>
+              <div class="item-name ${item.checked ? 'checked' : ''}">${escapeHtml(item.name)}</div>
+              <button class="btn-icon btn-icon-edit" data-edit-personal data-id="${id}" title="ערוך שם">✏️</button>
+              <button class="btn-icon" data-delete-personal data-id="${id}" title="מחק">🗑</button>
+            </div>
+          `).join('')
+          : `<div class="category-empty">אין כאן פריטים עדיין — הוסיפו למטה</div>`
+        }
+      </div>
+    `;
+
+    const packedSection = claimedShared.length ? `
+      <div class="personal-section">
+        <div class="category-header">
+          <span class="cat-emoji">🤝</span>
+          <span>ציוד משותף שאני מביא</span>
+          <span class="cat-count">${claimedShared.length}</span>
+        </div>
+        ${claimedShared.map(([id, item]) => {
+          const cat = CATEGORY_BY_ID[item.category] || CATEGORY_BY_ID[DEFAULT_CATEGORY];
+          const isPacked = !!item.packed?.[fam];
+          return `
+            <div class="check-row" data-kind="packed" data-checked="${isPacked ? 'true' : 'false'}" data-shared-id="${id}">
+              <div class="checkbox"></div>
+              <div class="item-name ${isPacked ? 'checked' : ''}">${escapeHtml(item.name)}</div>
+              <span class="cat-pill" title="קטגוריה משותפת">${cat.emoji} ${escapeHtml(cat.label)}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    ` : '';
+
+    list.innerHTML = personalSection + packedSection;
+
+    list.querySelectorAll('.check-row[data-kind="personal"]').forEach(row => {
       row.addEventListener('click', (e) => {
         if (e.target.closest('[data-delete-personal]')) return;
+        if (e.target.closest('[data-edit-personal]')) return;
         togglePersonalChecked(fam, row.dataset.id);
+      });
+    });
+    list.querySelectorAll('.check-row[data-kind="packed"]').forEach(row => {
+      row.addEventListener('click', () => {
+        togglePackedShared(row.dataset.sharedId, fam);
+      });
+    });
+    list.querySelectorAll('[data-edit-personal]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        editPersonalItem(fam, btn.dataset.id);
       });
     });
     list.querySelectorAll('[data-delete-personal]').forEach(btn => {
@@ -1055,9 +1324,14 @@
 
   function renderBadges() {
     $('sharedBadge').textContent = Object.keys(state.shared || {}).length;
-    const items = Object.values(state.personal?.[currentFamily] || {});
-    const checked = items.filter(i => i.checked).length;
-    $('personalBadge').textContent = `${checked}/${items.length}`;
+    const fam = currentFamily;
+    const personalItems = Object.values(state.personal?.[fam] || {});
+    const claimedItems = Object.values(state.shared || {}).filter(it => it.claims?.[fam]);
+    const checked =
+      personalItems.filter(i => i.checked).length +
+      claimedItems.filter(it => it.packed?.[fam]).length;
+    const total = personalItems.length + claimedItems.length;
+    $('personalBadge').textContent = `${checked}/${total}`;
   }
 
   // ─── UI Wiring ───
@@ -1080,7 +1354,7 @@
     const cat = $('sharedAddCategory').value;
     addSharedItem(v, cat);
     $('sharedAddInput').value = '';
-    $('sharedAddCategory').value = DEFAULT_CATEGORY;
+    $('sharedAddCategory').value = '';
   });
   $('sharedAddInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('sharedAddBtn').click(); });
 
@@ -1129,6 +1403,7 @@
     try {
       state = await fetchAll();
       await ensureSeed();
+      await migrateClassifications();
       render();
       subscribeRealtime();
     } catch (e) {
