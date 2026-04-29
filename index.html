@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
 <title>קמפינג 2026 — רשימת ציוד משותפת</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -409,6 +410,114 @@
     font-family: inherit; font-size: 13px;
   }
 
+  /* ───────── Login overlay ───────── */
+  .login-overlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #1e6b4d 0%, #0d3a26 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+  .login-overlay::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 25%, rgba(245, 158, 11, 0.18) 0%, transparent 40%),
+      radial-gradient(circle at 80% 75%, rgba(232, 93, 4, 0.12) 0%, transparent 45%);
+    pointer-events: none;
+  }
+  .login-card {
+    background: var(--paper);
+    border-radius: var(--radius-xl);
+    padding: 40px 32px;
+    max-width: 400px; width: 100%;
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .login-icon { font-size: 56px; margin-bottom: 8px; }
+  .login-card h1 {
+    font-size: 26px; font-weight: 800;
+    color: var(--forest-deep);
+    margin-bottom: 6px;
+  }
+  .login-card .login-subtitle {
+    color: var(--ink-soft);
+    font-size: 15px; font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .login-input {
+    width: 100%;
+    border: 2px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    font-family: inherit; font-size: 17px;
+    text-align: center;
+    background: #fafaf9;
+    direction: ltr;
+    letter-spacing: 1px;
+    transition: border-color 0.2s;
+  }
+  .login-input:focus { outline: none; border-color: var(--forest); background: white; }
+  .login-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px 20px;
+    background: var(--forest);
+    color: white; border: none;
+    border-radius: var(--radius-md);
+    font-family: inherit; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .login-btn:hover { background: var(--forest-deep); transform: translateY(-1px); }
+  .login-btn:active { transform: translateY(0); }
+  .login-error {
+    margin-top: 12px;
+    color: #b91c1c;
+    font-size: 14px; font-weight: 500;
+    min-height: 20px;
+  }
+  .login-hint {
+    margin-top: 18px;
+    color: var(--ink-dim);
+    font-size: 12px;
+  }
+
+  /* Logged-in indicator (replaces family chips) */
+  .me-bar {
+    background: var(--paper);
+    border-radius: var(--radius-lg);
+    padding: 14px 22px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-md);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .me-info {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; color: var(--ink-soft);
+  }
+  .me-info .me-name {
+    color: var(--ink); font-weight: 700;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .me-info .me-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .me-info[data-family="avidan"] .me-dot { background: var(--avidan); }
+  .me-info[data-family="afsoa"] .me-dot { background: var(--afsoa); }
+  .me-info[data-family="weizman"] .me-dot { background: var(--weizman); }
+  .me-info[data-family="sofer"] .me-dot { background: var(--sofer); }
+  .btn-logout {
+    background: transparent;
+    border: 1.5px solid var(--line-strong);
+    color: var(--ink-soft);
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-logout:hover { border-color: #b91c1c; color: #b91c1c; }
+
   @media (max-width: 640px) {
     .app { padding: 16px; }
     .hero { padding: 28px 24px; }
@@ -416,13 +525,29 @@
     .list-items { padding: 4px 8px 12px; }
     .item-row, .check-row { gap: 10px; padding: 12px 8px; }
     .item-name { font-size: 15px; }
+    .login-card { padding: 32px 22px; }
   }
 </style>
 </head>
 <body>
 
+<!-- ═════════ Login overlay ═════════ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-icon">🏕️</div>
+    <h1>קמפינג 2026</h1>
+    <div class="login-subtitle">הקלידו את מספר הטלפון שלכם כדי להיכנס</div>
+    <form id="loginForm" autocomplete="off">
+      <input class="login-input" id="loginInput" type="tel" inputmode="numeric" placeholder="05XXXXXXXX" maxlength="10" autofocus />
+      <button class="login-btn" type="submit">כניסה</button>
+      <div class="login-error" id="loginError"></div>
+    </form>
+    <div class="login-hint">רק בני המשפחות יכולים להיכנס 🌲</div>
+  </div>
+</div>
+
 <!-- ═════════ Main App ═════════ -->
-<div class="app" id="app">
+<div class="app" id="app" style="display:none;">
   <!-- Hero -->
   <header class="hero">
     <div class="hero-row">
@@ -440,26 +565,19 @@
     </div>
   </header>
 
-  <!-- Family selector -->
-  <div class="family-selector">
-    <div class="label">👋 מי אני?</div>
-    <div class="family-chips" id="familyChips">
-      <button class="family-chip" data-family="avidan"><span class="family-dot"></span>משפחת אבידן</button>
-      <button class="family-chip" data-family="afsoa"><span class="family-dot"></span>משפחת אפסוה-שמעוני</button>
-      <button class="family-chip" data-family="weizman"><span class="family-dot"></span>משפחת ויצמן</button>
-      <button class="family-chip" data-family="sofer"><span class="family-dot"></span>משפחת סופר</button>
+  <!-- Logged-in indicator -->
+  <div class="me-bar">
+    <div class="me-info" id="meInfo" data-family="">
+      <span>👋 מחובר/ת כ:</span>
+      <span class="me-name"><span class="me-dot"></span><span id="meName">—</span></span>
     </div>
+    <button class="btn-logout" id="btnLogout">התנתק</button>
   </div>
 
   <!-- Tabs -->
   <div class="tabs" role="tablist">
     <button class="tab active" data-tab="shared">🍔 רשימה משותפת <span class="badge" id="sharedBadge">0</span></button>
     <button class="tab" data-tab="personal">🎒 רשימה אישית <span class="badge" id="personalBadge">0/0</span></button>
-  </div>
-
-  <!-- Banner if no family selected -->
-  <div class="pick-family-banner" id="pickFamilyBanner" style="display:none;">
-    👈 בחרו את המשפחה שלכם למעלה כדי להתחיל לשבץ ציוד ולסמן צ'קים
   </div>
 
   <!-- Shared panel -->
@@ -548,6 +666,41 @@
     'זוהרים וסטיקלייטים',
     'פנסים',
   ];
+
+  // ─── Auth (phone hashes — SHA-256 of phone digits + SALT) ───
+  const SALT = 'camping-app-2026-yoni';
+  const PHONE_HASHES = {
+    avidan: [
+      '89fea6124e0c3974fd54bea855b9110b0cc942bf84cd8d06217bbc3968885117',
+      'd5285c148ebba9b6b1db8f13cefb8b973e2b71ec60e5a14d8b983b31fd13a11b',
+    ],
+    afsoa: [
+      '39fb7d97da1d0ca9c4954711d191e2e92c8b9560681a29bc9103c0207e3064c4',
+      'ddfcc31a79370072ea57360c83fb6e097c43e138e759de867846bd50d9052638',
+    ],
+    weizman: [
+      '3ad7cf84f495b4086fd2af04e031e6fdb5b6160a8047cbd23ba0470f6df16a52',
+      '1dfc7d062b5e7cf1260a325e0e24c0d8097606f48bfaf5ad9a11907ee730389f',
+    ],
+    sofer: [
+      '2f482fc3cda356b2bbd983f42c8bb20bf70de94cf730920582263f53bf7cdcab',
+      '90e5933da05d9ea5697c66e96341de0c16cfa42226616e77b91d7e4ab6933a4f',
+    ],
+  };
+
+  async function hashPhone(phone) {
+    const digits = String(phone).replace(/\D/g, '');
+    const enc = new TextEncoder().encode(digits + SALT);
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function familyForHash(hash) {
+    for (const [fam, hashes] of Object.entries(PHONE_HASHES)) {
+      if (hashes.includes(hash)) return fam;
+    }
+    return null;
+  }
 
   // ─── State ───
   let state = { shared: {}, personal: {} };
@@ -676,17 +829,17 @@
 
   // ─── Render ───
   function render() {
-    renderFamilyChips();
+    renderMeBar();
     renderShared();
     renderPersonal();
     renderBadges();
   }
 
-  function renderFamilyChips() {
-    document.querySelectorAll('.family-chip').forEach(el => {
-      el.classList.toggle('active', el.dataset.family === currentFamily);
-    });
-    $('pickFamilyBanner').style.display = currentFamily ? 'none' : 'block';
+  function renderMeBar() {
+    const info = $('meInfo');
+    if (!info) return;
+    info.dataset.family = currentFamily || '';
+    $('meName').textContent = currentFamily ? FAMILIES[currentFamily].label : '—';
   }
 
   function renderShared() {
@@ -701,7 +854,6 @@
     list.querySelectorAll('[data-claim-toggle]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!currentFamily) { alert('בחרו את המשפחה שלכם בראש העמוד'); return; }
         toggleClaim(btn.dataset.itemId, currentFamily);
       });
     });
@@ -726,12 +878,12 @@
         <span class="x">×</span>
       </span>
     `).join('');
-    const myClaim = currentFamily && claims[currentFamily];
-    const claimBtn = currentFamily ? `
+    const myClaim = claims[currentFamily];
+    const claimBtn = `
       <button class="btn-claim ${myClaim ? 'claimed' : ''}" data-claim-toggle data-item-id="${id}">
         ${myClaim ? '✓ אני מביא' : '+ אני מביא'}
       </button>
-    ` : `<button class="btn-claim" data-claim-toggle data-item-id="${id}">בחרו משפחה</button>`;
+    `;
     return `
       <div class="item-row">
         <div class="item-name">${escapeHtml(item.name)}</div>
@@ -791,24 +943,15 @@
 
   function renderBadges() {
     $('sharedBadge').textContent = Object.keys(state.shared || {}).length;
-    if (currentFamily) {
-      const items = Object.values(state.personal?.[currentFamily] || {});
-      const checked = items.filter(i => i.checked).length;
-      $('personalBadge').textContent = `${checked}/${items.length}`;
-    } else {
-      const total = Object.values(state.personal || {}).reduce((s, fam) => s + Object.keys(fam || {}).length, 0);
-      $('personalBadge').textContent = total;
-    }
+    const items = Object.values(state.personal?.[currentFamily] || {});
+    const checked = items.filter(i => i.checked).length;
+    $('personalBadge').textContent = `${checked}/${items.length}`;
   }
 
   // ─── UI Wiring ───
-  document.querySelectorAll('.family-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      currentFamily = chip.dataset.family;
-      currentPersonalView = currentFamily;
-      localStorage.setItem('camping.family', currentFamily);
-      render();
-    });
+  $('btnLogout').addEventListener('click', () => {
+    localStorage.removeItem('camping.family');
+    location.reload();
   });
 
   document.querySelectorAll('.tab').forEach(tab => {
@@ -887,7 +1030,37 @@
     }
   }
 
-  boot();
+  // ─── Auth flow ───
+  function enterApp(family) {
+    currentFamily = family;
+    currentPersonalView = family;
+    localStorage.setItem('camping.family', family);
+    $('loginOverlay').style.display = 'none';
+    $('app').style.display = 'block';
+    boot();
+  }
+
+  $('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const input = $('loginInput');
+    const errEl = $('loginError');
+    errEl.textContent = '';
+    const phone = input.value.trim();
+    if (!phone) return;
+    const hash = await hashPhone(phone);
+    const fam = familyForHash(hash);
+    if (!fam) {
+      errEl.textContent = 'מספר לא מזוהה — בדקו את המספר ונסו שוב';
+      input.select();
+      return;
+    }
+    enterApp(fam);
+  });
+
+  // Auto-login if we already have a remembered family
+  if (currentFamily && FAMILIES[currentFamily]) {
+    enterApp(currentFamily);
+  }
 </script>
 </body>
 </html>
