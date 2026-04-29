@@ -155,6 +155,52 @@
     100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
   }
 
+  /* ───────── Countdown to Friday 18:00 ───────── */
+  .countdown {
+    position: relative; z-index: 1;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-md);
+  }
+  .countdown-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.88);
+    letter-spacing: 0.2px;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .countdown-units {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .cu {
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-sm);
+    padding: 8px 4px 6px;
+    text-align: center;
+  }
+  .cu-num {
+    font-size: clamp(20px, 6vw, 26px);
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    color: white;
+    line-height: 1;
+  }
+  .cu-lbl {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.72);
+    margin-top: 4px;
+    letter-spacing: 0.2px;
+  }
+
   /* ───────── Family Selector (legacy) ───────── */
   .family-selector {
     background: var(--paper);
@@ -1179,12 +1225,21 @@
         <div class="hero-icon">🏕️</div>
         <div>
           <h1>קמפינג 2026</h1>
-          <div class="subtitle">רשימת ציוד משותפת — אבידן · אפסוה-שמעוני · ויצמן · סופר</div>
+          <div class="subtitle">מתכנסים יום שישי ב־18:00</div>
         </div>
       </div>
       <div class="sync-status" id="syncStatus">
         <div class="sync-dot offline" id="syncDot"></div>
         <span id="syncText">מתחבר...</span>
+      </div>
+    </div>
+    <div class="countdown" id="countdown" aria-label="ספירה לאחור עד ההתכנסות">
+      <div class="countdown-label">⏱ נותרו עד למפגש</div>
+      <div class="countdown-units">
+        <div class="cu"><div class="cu-num" id="cdDays">00</div><div class="cu-lbl">ימים</div></div>
+        <div class="cu"><div class="cu-num" id="cdHrs">00</div><div class="cu-lbl">שעות</div></div>
+        <div class="cu"><div class="cu-num" id="cdMins">00</div><div class="cu-lbl">דקות</div></div>
+        <div class="cu"><div class="cu-num" id="cdSecs">00</div><div class="cu-lbl">שניות</div></div>
       </div>
     </div>
   </header>
@@ -2203,7 +2258,8 @@
 
   function sharedItemHtml(id, item) {
     const claims = item.claims || {};
-    const claimChips = Object.keys(claims).map(fam => `
+    // Show chips for OTHER families only — the "אני מביא" button already conveys current user's claim
+    const claimChips = Object.keys(claims).filter(fam => fam !== currentFamily).map(fam => `
       <span class="claim-chip ${fam}" data-claim-remove data-item-id="${id}" data-family="${fam}" title="לחצו להסרה">
         ${escapeHtml(FAMILIES[fam]?.short || fam)}
         <span class="x">×</span>
@@ -2486,6 +2542,29 @@
   if (currentFamily && FAMILIES[currentFamily]) {
     enterApp(currentFamily, 'auto');
   }
+
+  // ── Countdown to next Friday 18:00 ──
+  function nextFriday18() {
+    const now = new Date();
+    const t = new Date(now);
+    t.setHours(18, 0, 0, 0);
+    const offset = (5 - now.getDay() + 7) % 7;
+    t.setDate(t.getDate() + offset);
+    if (t.getTime() <= now.getTime()) t.setDate(t.getDate() + 7);
+    return t;
+  }
+  function tickCountdown() {
+    const target = nextFriday18();
+    const diff = Math.max(0, target - new Date());
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = String(n).padStart(2, '0'); };
+    set('cdDays', d); set('cdHrs', h); set('cdMins', m); set('cdSecs', s);
+  }
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
 </script>
 
 <!-- ═════════ Edit shared item modal ═════════ -->
