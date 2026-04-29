@@ -791,6 +791,160 @@
     .add-select { flex-basis: 100%; }
     .btn-add { width: 100%; justify-content: center; }
   }
+
+  /* ─── Trip info card ─── */
+  .trip-info {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(31,41,55,0.04);
+  }
+  .trip-info-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  }
+  .trip-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f4faf6;
+    border: 1px solid #d6ead8;
+    color: var(--forest-deep);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px; font-weight: 600;
+    white-space: nowrap;
+  }
+  .trip-chip .em { font-size: 15px; }
+  .trip-link-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 13px; font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    transition: filter 0.15s, transform 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+  .trip-link-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+  .trip-link-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .trip-link-btn.waze { background: #33ccff; color: #003a55; }
+  .trip-link-btn.whatsapp { background: #25d366; color: #fff; }
+  .trip-info-meta {
+    margin-top: 8px;
+    display: flex; flex-wrap: wrap; gap: 6px 14px;
+    font-size: 12px; color: var(--ink-soft);
+  }
+  .trip-info-meta strong { color: var(--ink); font-weight: 700; }
+  .trip-map-toggle {
+    margin-top: 10px;
+    background: transparent;
+    border: 1px dashed var(--line-strong);
+    color: var(--ink-soft);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .trip-map-toggle:hover { background: #fafaf9; color: var(--ink); }
+  .trip-map {
+    margin-top: 10px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    height: 240px;
+    display: none;
+  }
+  .trip-map.open { display: block; }
+  .trip-map iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+  @media (max-width: 480px) {
+    .trip-info { padding: 12px 14px; margin-bottom: 12px; }
+    .trip-chip, .trip-link-btn { font-size: 12px; padding: 6px 10px; }
+    .trip-map { height: 200px; }
+  }
+
+  /* ─── Edit modal ─── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 16px;
+    z-index: 1000;
+    animation: modalFade 0.15s ease-out;
+  }
+  .modal-overlay.open { display: flex; }
+  @keyframes modalFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .modal {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 22px 22px 18px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    animation: modalRise 0.18s ease-out;
+  }
+  @keyframes modalRise {
+    from { transform: translateY(8px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal h3 {
+    margin: 0 0 14px;
+    font-size: 18px; font-weight: 800;
+    color: var(--forest-deep);
+  }
+  .modal-field { margin-bottom: 12px; }
+  .modal-field label {
+    display: block;
+    font-size: 12px; font-weight: 700;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .modal-field input,
+  .modal-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    font-family: inherit; font-size: 15px;
+    background: #fff; color: var(--ink);
+    box-sizing: border-box;
+  }
+  .modal-field input:focus,
+  .modal-field select:focus {
+    outline: none;
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(30,107,77,0.15);
+  }
+  .modal-actions {
+    display: flex; justify-content: flex-start; gap: 8px;
+    margin-top: 16px;
+  }
+  .modal-btn {
+    padding: 9px 18px;
+    border-radius: var(--radius-md);
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+  }
+  .modal-btn.primary {
+    background: var(--forest);
+    color: #fff;
+  }
+  .modal-btn.primary:hover { background: var(--forest-deep); }
+  .modal-btn.ghost {
+    background: #fafaf9;
+    color: var(--ink-soft);
+    border-color: var(--line-strong);
+  }
+  .modal-btn.ghost:hover { background: #f4f4f3; color: var(--ink); }
 </style>
 </head>
 <body>
@@ -836,6 +990,37 @@
       <span class="me-name"><span class="me-dot"></span><span id="meName">—</span></span>
     </div>
     <button class="btn-logout" id="btnLogout">התנתק</button>
+  </div>
+
+  <!-- Trip info card -->
+  <div class="trip-info" id="tripInfo">
+    <div class="trip-info-row">
+      <span class="trip-chip"><span class="em">👨‍👩‍👧‍👦</span> 8 מבוגרים · 6 ילדים</span>
+      <span class="trip-chip"><span class="em">📍</span> חניון פתחת נחל אורן</span>
+      <a class="trip-link-btn waze"
+         href="https://waze.com/ul?a=share_drive&amp;locale=en&amp;sd=7vCrIsOswdifJDC5wQ-sd&amp;env=il&amp;utm_source=waze_app&amp;utm_campaign=share_drive"
+         target="_blank" rel="noopener" title="פתח בוויז">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.7 12.6c.5-1 .8-2.1.8-3.2C21.5 5.3 17.4 2 12.4 2 7.7 2 3.8 4.9 3.3 8.7c-.3.2-.6.5-.8.9-.5.7-.5 1.7 0 2.4.3.5.8.8 1.4.9.4 2.5 2.4 4.6 5.3 5.6-.1.3-.1.6-.1.9 0 1.5 1.2 2.6 2.7 2.6s2.7-1.1 2.7-2.6c0-.1 0-.3-.1-.4h.6c0 .1-.1.3-.1.4 0 1.5 1.2 2.6 2.7 2.6 1.5 0 2.7-1.1 2.7-2.6 0-1-.6-1.9-1.4-2.3.7-.7 1.3-1.5 1.7-2.4l.1-.1zM9.5 9c.6 0 1.1.5 1.1 1.1S10.1 11.2 9.5 11.2 8.4 10.7 8.4 10.1 8.9 9 9.5 9zm5.5 0c.6 0 1.1.5 1.1 1.1s-.5 1.1-1.1 1.1-1.1-.5-1.1-1.1S14.4 9 15 9zm-3 7c-2 0-3.7-1.1-4.5-2.8-.1-.3.1-.6.4-.7.3-.1.6.1.7.4.6 1.3 1.9 2.1 3.4 2.1s2.8-.8 3.4-2.1c.1-.3.4-.4.7-.4.3.1.5.4.4.7C15.7 14.9 14 16 12 16z"/>
+        </svg>
+        Waze
+      </a>
+      <a class="trip-link-btn whatsapp"
+         href="https://chat.whatsapp.com/CDnEhs8F5oY2YDMx4BtuQX"
+         target="_blank" rel="noopener" title="קבוצת וואטסאפ">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.3 5.2 4.5 3.1 1.2 3.1.8 3.7.8.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 22c-1.7 0-3.3-.4-4.7-1.2L2 22l1.3-5.1C2.5 15.4 2 13.7 2 12 2 6.5 6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/>
+        </svg>
+        וואטסאפ
+      </a>
+    </div>
+    <div class="trip-info-meta">
+      <span><strong>הגעה משוערת:</strong> 17:14</span>
+    </div>
+    <button class="trip-map-toggle" id="tripMapToggle" type="button" aria-expanded="false" aria-controls="tripMap">
+      🗺 הצג מפה
+    </button>
+    <div class="trip-map" id="tripMap"></div>
   </div>
 
   <!-- Tabs -->
@@ -1063,6 +1248,49 @@
     } catch { alert('הקישור: ' + location.href); }
   });
 
+  // ─── Edit shared item modal handlers ───
+  (() => {
+    const overlay = $('editSharedModal');
+    const cancelBtn = $('editSharedCancel');
+    const saveBtn = $('editSharedSave');
+    const nameInput = $('editSharedName');
+    if (!overlay || !cancelBtn || !saveBtn || !nameInput) return;
+    cancelBtn.addEventListener('click', closeEditSharedModal);
+    saveBtn.addEventListener('click', saveEditSharedModal);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeEditSharedModal();
+    });
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); saveEditSharedModal(); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeEditSharedModal();
+    });
+  })();
+
+  // ─── Trip map (lazy-load iframe on first open) ───
+  (() => {
+    const toggle = $('tripMapToggle');
+    const map = $('tripMap');
+    if (!toggle || !map) return;
+    const MAP_SRC = 'https://maps.google.com/maps?q=' +
+      encodeURIComponent('חניון פתחת נחל אורן') +
+      '&t=&z=14&ie=UTF8&iwloc=&output=embed';
+    toggle.addEventListener('click', () => {
+      const isOpen = map.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      toggle.textContent = isOpen ? '🗺 הסתר מפה' : '🗺 הצג מפה';
+      if (isOpen && !map.firstChild) {
+        const f = document.createElement('iframe');
+        f.src = MAP_SRC;
+        f.loading = 'lazy';
+        f.referrerPolicy = 'no-referrer-when-downgrade';
+        f.title = 'מפת החניון';
+        map.appendChild(f);
+      }
+    });
+  })();
+
   // ─── Data layer ───
   async function fetchAll() {
     const { data, error } = await supabase
@@ -1222,19 +1450,46 @@
     return p;
   }
 
+  let editSharedTargetId = null;
+
   function editSharedItem(id) {
     const item = state.shared?.[id];
     if (!item) return;
-    const next = prompt('שם חדש לפריט:', item.name);
-    if (next == null) return;
-    const trimmed = next.trim();
-    if (!trimmed || trimmed === item.name) return;
-    const oldName = item.name;
-    const p = mutate('shared', (s) => {
-      if (s[id]) s[id].name = trimmed;
-    });
-    logActivity('edit_shared', { from: oldName, to: trimmed });
-    return p;
+    editSharedTargetId = id;
+    const overlay = $('editSharedModal');
+    const nameInput = $('editSharedName');
+    const catSelect = $('editSharedCategory');
+    nameInput.value = item.name || '';
+    catSelect.value = CATEGORY_BY_ID[item.category] ? item.category : DEFAULT_CATEGORY;
+    overlay.classList.add('open');
+    setTimeout(() => { nameInput.focus(); nameInput.select(); }, 0);
+  }
+
+  function closeEditSharedModal() {
+    $('editSharedModal').classList.remove('open');
+    editSharedTargetId = null;
+  }
+
+  function saveEditSharedModal() {
+    const id = editSharedTargetId;
+    if (!id) return closeEditSharedModal();
+    const item = state.shared?.[id];
+    if (!item) return closeEditSharedModal();
+    const newName = ($('editSharedName').value || '').trim();
+    const newCat = $('editSharedCategory').value;
+    if (!newName) {
+      $('editSharedName').focus();
+      return;
+    }
+    closeEditSharedModal();
+    if (newName !== item.name) {
+      const oldName = item.name;
+      mutate('shared', (s) => { if (s[id]) s[id].name = newName; });
+      logActivity('edit_shared', { from: oldName, to: newName });
+    }
+    if (newCat && newCat !== item.category) {
+      setSharedCategory(id, newCat);
+    }
   }
 
   function duplicateSharedItem(id) {
@@ -2029,5 +2284,29 @@
     enterApp(currentFamily, 'auto');
   }
 </script>
+
+<!-- ═════════ Edit shared item modal ═════════ -->
+<div class="modal-overlay" id="editSharedModal" role="dialog" aria-modal="true" aria-labelledby="editSharedTitle">
+  <div class="modal" role="document">
+    <h3 id="editSharedTitle">עריכת פריט</h3>
+    <div class="modal-field">
+      <label for="editSharedName">שם הפריט</label>
+      <input type="text" id="editSharedName" autocomplete="off" />
+    </div>
+    <div class="modal-field">
+      <label for="editSharedCategory">קטגוריה</label>
+      <select id="editSharedCategory">
+        <option value="breakfast">🍳 ארוחת בוקר</option>
+        <option value="dinner">🍔 ארוחת ערב</option>
+        <option value="general">🎒 ציוד כללי</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn primary" id="editSharedSave" type="button">שמור</button>
+      <button class="modal-btn ghost" id="editSharedCancel" type="button">ביטול</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
