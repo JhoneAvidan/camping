@@ -636,19 +636,20 @@
 
   /* ───────── Shared Item Row — Mobile First ───────── */
   .item-row {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 10px;
     padding: 10px 8px;
     min-height: var(--hit);
     border-radius: var(--radius-md);
     transition: background 0.15s;
-    flex-wrap: wrap;
   }
   .item-row:hover { background: rgba(31, 41, 55, 0.03); }
   .item-row + .item-row { border-top: 1px solid var(--line); }
   .item-name {
-    flex: 1 1 100%; font-size: 15px; font-weight: 500;
-    word-break: break-word;
+    flex: 1 1 0;
     min-width: 0;
+    font-size: 15px; font-weight: 500;
+    word-break: break-word;
+    line-height: 1.35;
   }
   .item-name.checked {
     text-decoration: line-through;
@@ -764,18 +765,20 @@
   /* Drag handle */
   .drag-handle {
     flex-shrink: 0;
-    width: 28px; height: var(--hit);
+    width: 22px; height: 28px;
     display: flex; align-items: center; justify-content: center;
     color: var(--ink-dim);
-    font-size: 16px; line-height: 1;
+    opacity: 0.55;
+    font-size: 14px; line-height: 1;
     cursor: grab;
     user-select: none;
     touch-action: none;
     border-radius: 6px;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, opacity 0.15s;
   }
-  .drag-handle:hover { background: rgba(31, 41, 55, 0.05); color: var(--forest); }
-  .drag-handle:active { cursor: grabbing; }
+  .drag-handle:hover { background: rgba(31, 41, 55, 0.05); color: var(--forest); opacity: 1; }
+  .drag-handle:active { cursor: grabbing; opacity: 1; }
+  .item-row:hover .drag-handle { opacity: 0.85; }
 
   .sortable-ghost {
     opacity: 0.4;
