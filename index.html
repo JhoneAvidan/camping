@@ -322,9 +322,11 @@
     padding: 16px 12px;
     border-top: 1px dashed var(--line-strong);
     margin-top: 4px;
+    flex-wrap: wrap;
   }
   .add-input {
     flex: 1;
+    min-width: 0;
     border: 2px solid var(--line);
     border-radius: var(--radius-md);
     padding: 11px 16px;
@@ -333,6 +335,57 @@
     background: #fafaf9;
   }
   .add-input:focus { outline: none; border-color: var(--forest); background: white; }
+  .add-select {
+    border: 2px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 11px 14px;
+    font-family: inherit; font-size: 15px;
+    background: #fafaf9;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .add-select:focus { outline: none; border-color: var(--forest); background: white; }
+
+  /* Category sections */
+  .category-section + .category-section {
+    margin-top: 8px;
+    border-top: 1px solid var(--line);
+    padding-top: 8px;
+  }
+  .category-header {
+    padding: 14px 12px 8px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 700;
+    color: var(--forest-deep);
+    text-transform: none;
+    letter-spacing: 0.2px;
+  }
+  .category-header .cat-emoji { font-size: 18px; }
+  .category-header .cat-count {
+    margin-right: auto;
+    font-size: 12px; color: var(--ink-dim); font-weight: 600;
+    background: rgba(31, 41, 55, 0.05);
+    padding: 2px 10px; border-radius: 999px;
+  }
+  .category-empty {
+    padding: 4px 16px 12px;
+    color: var(--ink-dim);
+    font-size: 13px;
+    font-style: italic;
+  }
+  .cat-select {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-family: inherit; font-size: 12px;
+    background: white;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .cat-select:hover { border-color: var(--forest); }
+  .cat-select:focus { outline: none; border-color: var(--forest); }
   .btn-add {
     padding: 11px 20px;
     background: var(--forest);
@@ -345,37 +398,6 @@
     white-space: nowrap;
   }
   .btn-add:hover { background: var(--forest-deep); }
-
-  /* Personal — family tabs */
-  .person-tabs {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .person-tab {
-    padding: 10px 18px;
-    border-radius: var(--radius-md);
-    border: 2px solid var(--line);
-    background: white;
-    font-family: inherit; font-size: 14px; font-weight: 600;
-    color: var(--ink-soft);
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .person-tab:hover { border-color: var(--line-strong); }
-  .person-tab.active { color: white; }
-  .person-tab[data-family="avidan"].active { background: var(--avidan); border-color: var(--avidan); }
-  .person-tab[data-family="afsoa"].active { background: var(--afsoa); border-color: var(--afsoa); }
-  .person-tab[data-family="weizman"].active { background: var(--weizman); border-color: var(--weizman); }
-  .person-tab[data-family="sofer"].active { background: var(--sofer); border-color: var(--sofer); }
-  .person-tab .progress {
-    font-size: 12px;
-    background: rgba(31, 41, 55, 0.06);
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-weight: 700;
-  }
-  .person-tab.active .progress { background: rgba(255, 255, 255, 0.2); color: white; }
 
   /* Empty state */
   .empty {
@@ -519,13 +541,62 @@
   .btn-logout:hover { border-color: #b91c1c; color: #b91c1c; }
 
   @media (max-width: 640px) {
-    .app { padding: 16px; }
-    .hero { padding: 28px 24px; }
-    .list-header { padding: 20px 20px 12px; }
-    .list-items { padding: 4px 8px 12px; }
-    .item-row, .check-row { gap: 10px; padding: 12px 8px; }
-    .item-name { font-size: 15px; }
-    .login-card { padding: 32px 22px; }
+    .app { padding: 12px; }
+
+    .hero { padding: 22px 20px; border-radius: var(--radius-lg); margin-bottom: 16px; }
+    .hero-row { flex-direction: column; align-items: stretch; gap: 14px; }
+    .hero-icon { font-size: 36px; }
+    .hero h1 { font-size: 24px; }
+    .hero .subtitle { font-size: 13px; line-height: 1.4; }
+    .sync-status { align-self: flex-start; padding: 8px 14px; font-size: 13px; }
+
+    .me-bar { padding: 12px 16px; margin-bottom: 16px; gap: 8px; }
+    .me-info { font-size: 13px; gap: 6px; flex-wrap: wrap; }
+    .btn-logout { padding: 6px 12px; font-size: 12px; }
+
+    .tabs { width: 100%; margin-bottom: 16px; }
+    .tab { flex: 1; padding: 10px 12px; font-size: 13px; text-align: center; }
+    .tab .badge { font-size: 11px; padding: 1px 6px; margin-right: 4px; }
+
+    .list-card { border-radius: var(--radius-lg); margin-bottom: 14px; }
+    .list-header { padding: 16px 16px 8px; }
+    .list-header h2 { font-size: 17px; }
+    .list-header .count { font-size: 12px; }
+    .list-items { padding: 4px 6px 10px; }
+
+    .category-header { padding: 12px 10px 6px; font-size: 13px; }
+    .category-header .cat-emoji { font-size: 16px; }
+    .category-empty { padding: 2px 12px 10px; font-size: 12px; }
+
+    .item-row, .check-row { gap: 8px; padding: 10px 6px; flex-wrap: wrap; }
+    .item-row .item-name, .check-row .item-name { font-size: 14px; flex-basis: 100%; }
+    .item-claims { gap: 3px; }
+    .claim-chip { padding: 3px 9px; font-size: 11px; }
+    .btn-claim { padding: 6px 12px; font-size: 12px; }
+    .cat-select { font-size: 11px; padding: 3px 6px; }
+    .btn-icon { width: 26px; height: 26px; font-size: 14px; }
+
+    .check-row { gap: 10px; flex-wrap: nowrap; }
+    .check-row .item-name { flex-basis: auto; flex: 1; }
+    .checkbox { width: 22px; height: 22px; }
+
+    .add-row { padding: 12px 8px; gap: 8px; }
+    .add-input { padding: 10px 14px; font-size: 14px; flex-basis: 100%; }
+    .add-select { padding: 10px 12px; font-size: 14px; flex: 1; }
+    .btn-add { padding: 10px 16px; font-size: 14px; flex: 0 0 auto; }
+
+    .footer { padding: 24px 0 12px; font-size: 12px; }
+
+    .login-card { padding: 28px 20px; }
+    .login-card h1 { font-size: 22px; }
+    .login-card .login-subtitle { font-size: 13px; margin-bottom: 18px; }
+    .login-input { font-size: 16px; padding: 12px 14px; }
+    .login-btn { font-size: 15px; padding: 12px 18px; }
+  }
+
+  @media (max-width: 380px) {
+    .add-select { flex-basis: 100%; }
+    .btn-add { width: 100%; justify-content: center; }
   }
 </style>
 </head>
@@ -590,6 +661,11 @@
       <div class="list-items" id="sharedList"></div>
       <div class="add-row">
         <input class="add-input" id="sharedAddInput" placeholder="הוסיפו רעיון חדש לרשימה המשותפת..." />
+        <select class="add-select" id="sharedAddCategory">
+          <option value="general">🎒 ציוד כללי</option>
+          <option value="breakfast">🍳 ארוחת בוקר</option>
+          <option value="dinner">🍔 ארוחת ערב</option>
+        </select>
         <button class="btn-add" id="sharedAddBtn">+ הוסף</button>
       </div>
     </div>
@@ -597,12 +673,6 @@
 
   <!-- Personal panel -->
   <section class="panel" id="panel-personal">
-    <div class="person-tabs" id="personTabs">
-      <button class="person-tab" data-family="avidan">משפחת אבידן <span class="progress" id="prog-avidan">0/0</span></button>
-      <button class="person-tab" data-family="afsoa">משפחת אפסוה-שמעוני <span class="progress" id="prog-afsoa">0/0</span></button>
-      <button class="person-tab" data-family="weizman">משפחת ויצמן <span class="progress" id="prog-weizman">0/0</span></button>
-      <button class="person-tab" data-family="sofer">משפחת סופר <span class="progress" id="prog-sofer">0/0</span></button>
-    </div>
     <div class="list-card">
       <div class="list-header">
         <h2 id="personalTitle">🎒 ציוד אישי</h2>
@@ -640,22 +710,30 @@
     sofer:    { id: 'sofer',    label: 'משפחת סופר',           short: 'סופר' },
   };
 
+  const CATEGORIES = [
+    { id: 'breakfast', label: 'ארוחת בוקר', emoji: '🍳' },
+    { id: 'dinner',    label: 'ארוחת ערב',  emoji: '🍔' },
+    { id: 'general',   label: 'ציוד כללי',  emoji: '🎒' },
+  ];
+  const CATEGORY_BY_ID = Object.fromEntries(CATEGORIES.map(c => [c.id, c]));
+  const DEFAULT_CATEGORY = 'general';
+
   const SEED_SHARED = [
-    'מנגל ופחמים',
-    'המבורגר',
-    'נקניקיות',
-    'פרגיות',
-    'לחמניות המבורגר',
-    'לחמניות אצבע לנקניקיות',
-    'רטבים (קטשופ / מיונז / חרדל)',
-    'שקיות זבל',
-    'חד״פ (צלחות / כוסות / סכו״ם)',
-    'בירה — שישיה לכל משפחה',
-    'גזיה',
-    'מחבת',
-    'שמן לטיגון',
-    'בצל',
-    'ירקות לסלט',
+    { name: 'מנגל ופחמים', category: 'dinner' },
+    { name: 'המבורגר', category: 'dinner' },
+    { name: 'נקניקיות', category: 'dinner' },
+    { name: 'פרגיות', category: 'dinner' },
+    { name: 'לחמניות המבורגר', category: 'dinner' },
+    { name: 'לחמניות אצבע לנקניקיות', category: 'dinner' },
+    { name: 'רטבים (קטשופ / מיונז / חרדל)', category: 'dinner' },
+    { name: 'בצל', category: 'dinner' },
+    { name: 'ירקות לסלט', category: 'dinner' },
+    { name: 'שקיות זבל', category: 'general' },
+    { name: 'חד״פ (צלחות / כוסות / סכו״ם)', category: 'general' },
+    { name: 'בירה — שישיה לכל משפחה', category: 'general' },
+    { name: 'גזיה', category: 'general' },
+    { name: 'מחבת', category: 'general' },
+    { name: 'שמן לטיגון', category: 'general' },
   ];
 
   const SEED_PERSONAL = [
@@ -706,7 +784,6 @@
   let state = { shared: {}, personal: {} };
   let currentFamily = localStorage.getItem('camping.family') || null;
   let currentTab = 'shared';
-  let currentPersonalView = currentFamily || 'avidan';
 
   // ─── DOM helpers ───
   const $ = (id) => document.getElementById(id);
@@ -748,9 +825,9 @@
 
     if (sharedEmpty) {
       const seeded = {};
-      SEED_SHARED.forEach((name) => {
+      SEED_SHARED.forEach(({ name, category }) => {
         const id = 'sh_' + Math.random().toString(36).slice(2, 9);
-        seeded[id] = { name, claims: {}, addedBy: 'system', addedAt: Date.now() };
+        seeded[id] = { name, category: category || DEFAULT_CATEGORY, claims: {}, addedBy: 'system', addedAt: Date.now() };
       });
       state.shared = seeded;
       await writeKey('shared', seeded);
@@ -781,15 +858,23 @@
     }
   }
 
-  function addSharedItem(name) {
+  function addSharedItem(name, category) {
     const id = 'sh_' + Math.random().toString(36).slice(2, 9);
+    const cat = CATEGORY_BY_ID[category] ? category : DEFAULT_CATEGORY;
     return mutate('shared', (s) => {
-      s[id] = { name, claims: {}, addedBy: currentFamily || 'guest', addedAt: Date.now() };
+      s[id] = { name, category: cat, claims: {}, addedBy: currentFamily || 'guest', addedAt: Date.now() };
     });
   }
 
   function deleteSharedItem(id) {
     return mutate('shared', (s) => { delete s[id]; });
+  }
+
+  function setSharedCategory(id, category) {
+    const cat = CATEGORY_BY_ID[category] ? category : DEFAULT_CATEGORY;
+    return mutate('shared', (s) => {
+      if (s[id]) s[id].category = cat;
+    });
   }
 
   function toggleClaim(itemId, family) {
@@ -844,13 +929,37 @@
 
   function renderShared() {
     const list = $('sharedList');
-    const items = Object.entries(state.shared || {}).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
-    if (!items.length) {
+    const allItems = Object.entries(state.shared || {}).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
+
+    if (!allItems.length) {
       list.innerHTML = '<div class="empty">אין עדיין פריטים — הוסיפו את הראשון 🍔</div>';
     } else {
-      list.innerHTML = items.map(([id, item]) => sharedItemHtml(id, item)).join('');
+      const byCategory = {};
+      for (const cat of CATEGORIES) byCategory[cat.id] = [];
+      for (const [id, item] of allItems) {
+        const cat = CATEGORY_BY_ID[item.category] ? item.category : DEFAULT_CATEGORY;
+        byCategory[cat].push([id, item]);
+      }
+      list.innerHTML = CATEGORIES.map(cat => {
+        const rows = byCategory[cat.id];
+        const body = rows.length
+          ? rows.map(([id, item]) => sharedItemHtml(id, item)).join('')
+          : `<div class="category-empty">אין כאן פריטים עדיין</div>`;
+        return `
+          <div class="category-section" data-category="${cat.id}">
+            <div class="category-header">
+              <span class="cat-emoji">${cat.emoji}</span>
+              <span>${escapeHtml(cat.label)}</span>
+              <span class="cat-count">${rows.length}</span>
+            </div>
+            ${body}
+          </div>
+        `;
+      }).join('');
     }
-    $('sharedCount').textContent = items.length + ' פריטים';
+
+    $('sharedCount').textContent = allItems.length + ' פריטים';
+
     list.querySelectorAll('[data-claim-toggle]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -866,6 +975,11 @@
     list.querySelectorAll('[data-delete-shared]').forEach(btn => {
       btn.addEventListener('click', () => {
         if (confirm('למחוק את הפריט?')) deleteSharedItem(btn.dataset.id);
+      });
+    });
+    list.querySelectorAll('[data-cat-select]').forEach(sel => {
+      sel.addEventListener('change', (e) => {
+        setSharedCategory(sel.dataset.id, sel.value);
       });
     });
   }
@@ -884,61 +998,59 @@
         ${myClaim ? '✓ אני מביא' : '+ אני מביא'}
       </button>
     `;
+    const currentCat = CATEGORY_BY_ID[item.category] ? item.category : DEFAULT_CATEGORY;
+    const catOptions = CATEGORIES.map(c => `
+      <option value="${c.id}" ${c.id === currentCat ? 'selected' : ''}>${c.emoji} ${escapeHtml(c.label)}</option>
+    `).join('');
     return `
       <div class="item-row">
         <div class="item-name">${escapeHtml(item.name)}</div>
         <div class="item-claims">${claimChips}</div>
         ${claimBtn}
+        <select class="cat-select" data-cat-select data-id="${id}" title="שינוי קטגוריה">${catOptions}</select>
         <button class="btn-icon" data-delete-shared data-id="${id}" title="מחק">🗑</button>
       </div>
     `;
   }
 
   function renderPersonal() {
-    document.querySelectorAll('.person-tab').forEach(el => {
-      el.classList.toggle('active', el.dataset.family === currentPersonalView);
-    });
-    Object.keys(FAMILIES).forEach(fam => {
-      const items = Object.values(state.personal?.[fam] || {});
-      const checked = items.filter(i => i.checked).length;
-      const el = $('prog-' + fam);
-      if (el) el.textContent = `${checked}/${items.length}`;
-    });
-
     const list = $('personalList');
-    const fam = currentPersonalView;
+    const fam = currentFamily;
+    if (!fam) {
+      list.innerHTML = '<div class="empty">התחברו כדי לראות את הרשימה האישית</div>';
+      $('personalTitle').textContent = '🎒 ציוד אישי';
+      $('personalCount').textContent = '0 פריטים';
+      return;
+    }
     const familyItems = state.personal?.[fam] || {};
     const items = Object.entries(familyItems).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
     $('personalTitle').innerHTML = `🎒 ציוד אישי — ${escapeHtml(FAMILIES[fam].label)}`;
     $('personalCount').textContent = items.length + ' פריטים';
 
-    const isMyFamily = currentFamily === fam;
     if (!items.length) {
       list.innerHTML = '<div class="empty">אין עדיין פריטים — הוסיפו את הראשון 🎒</div>';
     } else {
       list.innerHTML = items.map(([id, item]) => `
-        <div class="check-row" data-checked="${item.checked ? 'true' : 'false'}" data-id="${id}" ${isMyFamily ? '' : 'style="cursor:default;"'}>
+        <div class="check-row" data-checked="${item.checked ? 'true' : 'false'}" data-id="${id}">
           <div class="checkbox"></div>
           <div class="item-name ${item.checked ? 'checked' : ''}">${escapeHtml(item.name)}</div>
-          ${isMyFamily ? `<button class="btn-icon" data-delete-personal data-id="${id}" title="מחק">🗑</button>` : ''}
+          <button class="btn-icon" data-delete-personal data-id="${id}" title="מחק">🗑</button>
         </div>
       `).join('');
     }
 
-    if (isMyFamily) {
-      list.querySelectorAll('.check-row').forEach(row => {
-        row.addEventListener('click', (e) => {
-          if (e.target.closest('[data-delete-personal]')) return;
-          togglePersonalChecked(fam, row.dataset.id);
-        });
+    list.querySelectorAll('.check-row').forEach(row => {
+      row.addEventListener('click', (e) => {
+        if (e.target.closest('[data-delete-personal]')) return;
+        togglePersonalChecked(fam, row.dataset.id);
       });
-      list.querySelectorAll('[data-delete-personal]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (confirm('למחוק את הפריט?')) deletePersonalItem(fam, btn.dataset.id);
-        });
+    });
+    list.querySelectorAll('[data-delete-personal]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (confirm('למחוק את הפריט?')) deletePersonalItem(fam, btn.dataset.id);
       });
-    }
+    });
   }
 
   function renderBadges() {
@@ -962,25 +1074,21 @@
     });
   });
 
-  document.querySelectorAll('.person-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      currentPersonalView = tab.dataset.family;
-      renderPersonal();
-    });
-  });
-
   $('sharedAddBtn').addEventListener('click', () => {
     const v = $('sharedAddInput').value.trim();
     if (!v) return;
-    addSharedItem(v);
+    const cat = $('sharedAddCategory').value;
+    addSharedItem(v, cat);
     $('sharedAddInput').value = '';
+    $('sharedAddCategory').value = DEFAULT_CATEGORY;
   });
   $('sharedAddInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('sharedAddBtn').click(); });
 
   $('personalAddBtn').addEventListener('click', () => {
+    if (!currentFamily) return;
     const v = $('personalAddInput').value.trim();
     if (!v) return;
-    addPersonalItem(currentPersonalView, v);
+    addPersonalItem(currentFamily, v);
     $('personalAddInput').value = '';
   });
   $('personalAddInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('personalAddBtn').click(); });
@@ -1033,7 +1141,6 @@
   // ─── Auth flow ───
   function enterApp(family) {
     currentFamily = family;
-    currentPersonalView = family;
     localStorage.setItem('camping.family', family);
     $('loginOverlay').style.display = 'none';
     $('app').style.display = 'block';
