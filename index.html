@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>קמפינג 2026 — רשימת ציוד משותפת</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-1: #f5efe6;
+    --bg-2: #ebe3d4;
+    --paper: #ffffff;
+    --ink: #1f2937;
+    --ink-soft: #4b5563;
+    --ink-dim: #9ca3af;
+    --line: rgba(31, 41, 55, 0.08);
+    --line-strong: rgba(31, 41, 55, 0.16);
+    --forest: #1e6b4d;
+    --forest-deep: #134e35;
+    --campfire: #e85d04;
+    --campfire-soft: #f48c06;
+    --gold: #f59e0b;
+
+    --avidan: #3b82f6;
+    --afsoa: #a855f7;
+    --weizman: #10b981;
+    --sofer: #ef4444;
+
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08), 0 4px 8px rgba(15, 23, 42, 0.04);
+    --shadow-xl: 0 24px 48px rgba(15, 23, 42, 0.12), 0 8px 16px rgba(15, 23, 42, 0.06);
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --radius-xl: 28px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Heebo', system-ui, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(135deg, #f7f1e3 0%, #e9dfca 50%, #d6c4a3 100%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(30, 107, 77, 0.08) 0%, transparent 35%),
+      radial-gradient(circle at 88% 82%, rgba(232, 93, 4, 0.07) 0%, transparent 38%),
+      radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ───────── App Shell ───────── */
+  .app { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 24px; min-height: 100vh; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1e6b4d 0%, #134e35 60%, #0d3a26 100%);
+    border-radius: var(--radius-xl);
+    padding: 36px 40px;
+    color: white;
+    box-shadow: var(--shadow-xl);
+    position: relative; overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 90% 10%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 10% 90%, rgba(232, 93, 4, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-row {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 24px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .hero-title {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .hero-icon {
+    font-size: 48px;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: -0.5px;
+  }
+  .hero .subtitle {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 16px; font-weight: 500;
+    margin-top: 4px;
+  }
+  .sync-status {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 14px; font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .sync-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+    animation: pulse 2s infinite;
+  }
+  .sync-dot.offline { background: #ef4444; animation: none; }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+    70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  /* Family Selector */
+  .family-selector {
+    background: var(--paper);
+    border-radius: var(--radius-lg);
+    padding: 18px 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-md);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .family-selector .label {
+    font-size: 14px; color: var(--ink-soft); font-weight: 600;
+  }
+  .family-chips { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+  .family-chip {
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 2px solid var(--line);
+    background: white;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .family-chip:hover { border-color: var(--line-strong); transform: translateY(-1px); }
+  .family-chip.active {
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  .family-chip[data-family="avidan"].active { background: var(--avidan); border-color: var(--avidan); }
+  .family-chip[data-family="afsoa"].active { background: var(--afsoa); border-color: var(--afsoa); }
+  .family-chip[data-family="weizman"].active { background: var(--weizman); border-color: var(--weizman); }
+  .family-chip[data-family="sofer"].active { background: var(--sofer); border-color: var(--sofer); }
+  .family-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .family-chip[data-family="avidan"] .family-dot { background: var(--avidan); }
+  .family-chip[data-family="afsoa"] .family-dot { background: var(--afsoa); }
+  .family-chip[data-family="weizman"] .family-dot { background: var(--weizman); }
+  .family-chip[data-family="sofer"] .family-dot { background: var(--sofer); }
+  .family-chip.active .family-dot { background: white; }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 4px;
+    background: rgba(31, 41, 55, 0.06);
+    padding: 4px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+    width: fit-content;
+  }
+  .tab {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: none;
+    background: transparent;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active {
+    background: white;
+    color: var(--forest-deep);
+    box-shadow: var(--shadow-sm);
+  }
+  .tab .badge {
+    display: inline-block;
+    margin-right: 6px;
+    background: var(--forest);
+    color: white;
+    font-size: 12px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .tab.active .badge { background: var(--forest); }
+
+  /* Lists */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .list-card {
+    background: var(--paper);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .list-header {
+    padding: 24px 28px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .list-header h2 {
+    font-size: 22px; font-weight: 800;
+    color: var(--forest-deep);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .list-header .count {
+    font-size: 14px; color: var(--ink-soft); font-weight: 500;
+  }
+  .list-items { padding: 4px 16px 16px; }
+
+  /* Shared item row */
+  .item-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 12px;
+    border-radius: var(--radius-md);
+    transition: background 0.15s;
+  }
+  .item-row:hover { background: rgba(31, 41, 55, 0.03); }
+  .item-row + .item-row { border-top: 1px solid var(--line); }
+  .item-name {
+    flex: 1; font-size: 16px; font-weight: 500;
+    word-break: break-word;
+  }
+  .item-name.checked {
+    text-decoration: line-through;
+    color: var(--ink-dim);
+  }
+  .item-claims {
+    display: flex; gap: 4px; flex-wrap: wrap; align-items: center;
+  }
+  .claim-chip {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    color: white;
+    display: inline-flex; align-items: center; gap: 4px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .claim-chip:hover { opacity: 0.85; transform: scale(1.05); }
+  .claim-chip.avidan { background: var(--avidan); }
+  .claim-chip.afsoa { background: var(--afsoa); }
+  .claim-chip.weizman { background: var(--weizman); }
+  .claim-chip.sofer { background: var(--sofer); }
+  .claim-chip .x { opacity: 0.8; font-size: 14px; line-height: 1; }
+  .btn-claim {
+    padding: 7px 14px;
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-claim:hover { border-style: solid; color: var(--forest); border-color: var(--forest); }
+  .btn-claim.claimed { background: #d1fae5; color: #065f46; border: 1.5px solid #10b981; }
+  .btn-icon {
+    width: 30px; height: 30px;
+    border: none; background: transparent;
+    color: var(--ink-dim); cursor: pointer;
+    border-radius: 50%; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .btn-icon:hover { background: #fee2e2; color: #b91c1c; }
+
+  /* Personal item row (with checkbox) */
+  .check-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .check-row:hover { background: rgba(31, 41, 55, 0.03); }
+  .check-row + .check-row { border-top: 1px solid var(--line); }
+  .checkbox {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 8px;
+    border: 2px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    background: white;
+  }
+  .check-row[data-checked="true"] .checkbox {
+    background: var(--forest); border-color: var(--forest);
+  }
+  .check-row[data-checked="true"] .checkbox::before {
+    content: '✓'; color: white; font-weight: 800; font-size: 14px;
+  }
+  .check-row[data-checked="true"] .item-name {
+    text-decoration: line-through; color: var(--ink-dim);
+  }
+
+  /* Add row */
+  .add-row {
+    display: flex; gap: 10px;
+    padding: 16px 12px;
+    border-top: 1px dashed var(--line-strong);
+    margin-top: 4px;
+  }
+  .add-input {
+    flex: 1;
+    border: 2px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 11px 16px;
+    font-family: inherit; font-size: 15px;
+    transition: border-color 0.2s;
+    background: #fafaf9;
+  }
+  .add-input:focus { outline: none; border-color: var(--forest); background: white; }
+  .btn-add {
+    padding: 11px 20px;
+    background: var(--forest);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+  .btn-add:hover { background: var(--forest-deep); }
+
+  /* Personal — family tabs */
+  .person-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .person-tab {
+    padding: 10px 18px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--line);
+    background: white;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .person-tab:hover { border-color: var(--line-strong); }
+  .person-tab.active { color: white; }
+  .person-tab[data-family="avidan"].active { background: var(--avidan); border-color: var(--avidan); }
+  .person-tab[data-family="afsoa"].active { background: var(--afsoa); border-color: var(--afsoa); }
+  .person-tab[data-family="weizman"].active { background: var(--weizman); border-color: var(--weizman); }
+  .person-tab[data-family="sofer"].active { background: var(--sofer); border-color: var(--sofer); }
+  .person-tab .progress {
+    font-size: 12px;
+    background: rgba(31, 41, 55, 0.06);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .person-tab.active .progress { background: rgba(255, 255, 255, 0.2); color: white; }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 36px 16px;
+    color: var(--ink-dim);
+    font-size: 15px;
+  }
+
+  /* No-family banner */
+  .pick-family-banner {
+    background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+    border: 1px solid #fb923c;
+    color: #9a3412;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    font-size: 15px; font-weight: 500;
+    text-align: center;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 32px 0 16px;
+    color: var(--ink-dim);
+    font-size: 13px;
+  }
+  .footer button {
+    background: none; border: none; color: var(--ink-soft);
+    text-decoration: underline; cursor: pointer;
+    font-family: inherit; font-size: 13px;
+  }
+
+  @media (max-width: 640px) {
+    .app { padding: 16px; }
+    .hero { padding: 28px 24px; }
+    .list-header { padding: 20px 20px 12px; }
+    .list-items { padding: 4px 8px 12px; }
+    .item-row, .check-row { gap: 10px; padding: 12px 8px; }
+    .item-name { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═════════ Main App ═════════ -->
+<div class="app" id="app">
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-row">
+      <div class="hero-title">
+        <div class="hero-icon">🏕️</div>
+        <div>
+          <h1>קמפינג 2026</h1>
+          <div class="subtitle">רשימת ציוד משותפת — אבידן · אפסוה-שמעוני · ויצמן · סופר</div>
+        </div>
+      </div>
+      <div class="sync-status" id="syncStatus">
+        <div class="sync-dot offline" id="syncDot"></div>
+        <span id="syncText">מתחבר...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Family selector -->
+  <div class="family-selector">
+    <div class="label">👋 מי אני?</div>
+    <div class="family-chips" id="familyChips">
+      <button class="family-chip" data-family="avidan"><span class="family-dot"></span>משפחת אבידן</button>
+      <button class="family-chip" data-family="afsoa"><span class="family-dot"></span>משפחת אפסוה-שמעוני</button>
+      <button class="family-chip" data-family="weizman"><span class="family-dot"></span>משפחת ויצמן</button>
+      <button class="family-chip" data-family="sofer"><span class="family-dot"></span>משפחת סופר</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="shared">🍔 רשימה משותפת <span class="badge" id="sharedBadge">0</span></button>
+    <button class="tab" data-tab="personal">🎒 רשימה אישית <span class="badge" id="personalBadge">0/0</span></button>
+  </div>
+
+  <!-- Banner if no family selected -->
+  <div class="pick-family-banner" id="pickFamilyBanner" style="display:none;">
+    👈 בחרו את המשפחה שלכם למעלה כדי להתחיל לשבץ ציוד ולסמן צ'קים
+  </div>
+
+  <!-- Shared panel -->
+  <section class="panel active" id="panel-shared">
+    <div class="list-card">
+      <div class="list-header">
+        <h2>🍔 ציוד משותף</h2>
+        <div class="count" id="sharedCount">0 פריטים</div>
+      </div>
+      <div class="list-items" id="sharedList"></div>
+      <div class="add-row">
+        <input class="add-input" id="sharedAddInput" placeholder="הוסיפו רעיון חדש לרשימה המשותפת..." />
+        <button class="btn-add" id="sharedAddBtn">+ הוסף</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Personal panel -->
+  <section class="panel" id="panel-personal">
+    <div class="person-tabs" id="personTabs">
+      <button class="person-tab" data-family="avidan">משפחת אבידן <span class="progress" id="prog-avidan">0/0</span></button>
+      <button class="person-tab" data-family="afsoa">משפחת אפסוה-שמעוני <span class="progress" id="prog-afsoa">0/0</span></button>
+      <button class="person-tab" data-family="weizman">משפחת ויצמן <span class="progress" id="prog-weizman">0/0</span></button>
+      <button class="person-tab" data-family="sofer">משפחת סופר <span class="progress" id="prog-sofer">0/0</span></button>
+    </div>
+    <div class="list-card">
+      <div class="list-header">
+        <h2 id="personalTitle">🎒 ציוד אישי</h2>
+        <div class="count" id="personalCount">0 פריטים</div>
+      </div>
+      <div class="list-items" id="personalList"></div>
+      <div class="add-row">
+        <input class="add-input" id="personalAddInput" placeholder="הוסיפו פריט לרשימה האישית..." />
+        <button class="btn-add" id="personalAddBtn">+ הוסף</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <button id="btnCopyLink">🔗 העתק קישור משותף</button>
+    &nbsp;·&nbsp;
+    <span>נבנה באהבה לשבת קמפינג מצוינת 🌲</span>
+  </div>
+</div>
+
+<!-- ═════════ Supabase + App Logic ═════════ -->
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  // ─── Supabase config ───
+  const SUPABASE_URL = 'https://kvnhrfttxebqcksnmzko.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt2bmhyZnR0eGVicWNrc25temtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MzUwOTAsImV4cCI6MjA5MzAxMTA5MH0.beI_txouYKrlkGbJZ7fgPo4zAWB-ncglqINlpXITYPI';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ─── Constants ───
+  const FAMILIES = {
+    avidan:   { id: 'avidan',   label: 'משפחת אבידן',           short: 'אבידן' },
+    afsoa:    { id: 'afsoa',    label: 'משפחת אפסוה-שמעוני',  short: 'אפסוה-שמעוני' },
+    weizman:  { id: 'weizman',  label: 'משפחת ויצמן',          short: 'ויצמן' },
+    sofer:    { id: 'sofer',    label: 'משפחת סופר',           short: 'סופר' },
+  };
+
+  const SEED_SHARED = [
+    'מנגל ופחמים',
+    'המבורגר',
+    'נקניקיות',
+    'פרגיות',
+    'לחמניות המבורגר',
+    'לחמניות אצבע לנקניקיות',
+    'רטבים (קטשופ / מיונז / חרדל)',
+    'שקיות זבל',
+    'חד״פ (צלחות / כוסות / סכו״ם)',
+    'בירה — שישיה לכל משפחה',
+    'גזיה',
+    'מחבת',
+    'שמן לטיגון',
+    'בצל',
+    'ירקות לסלט',
+  ];
+
+  const SEED_PERSONAL = [
+    'אוהל',
+    'מזרן',
+    'שמיכות',
+    'אלתוש',
+    'זוהרים וסטיקלייטים',
+    'פנסים',
+  ];
+
+  // ─── State ───
+  let state = { shared: {}, personal: {} };
+  let currentFamily = localStorage.getItem('camping.family') || null;
+  let currentTab = 'shared';
+  let currentPersonalView = currentFamily || 'avidan';
+
+  // ─── DOM helpers ───
+  const $ = (id) => document.getElementById(id);
+  const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  $('btnCopyLink').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      $('btnCopyLink').textContent = '✓ הועתק!';
+      setTimeout(() => $('btnCopyLink').textContent = '🔗 העתק קישור משותף', 2000);
+    } catch { alert('הקישור: ' + location.href); }
+  });
+
+  // ─── Data layer ───
+  async function fetchAll() {
+    const { data, error } = await supabase
+      .from('camping_data')
+      .select('key, value')
+      .in('key', ['shared', 'personal']);
+    if (error) throw error;
+    const next = { shared: {}, personal: {} };
+    for (const row of data || []) {
+      next[row.key] = row.value || {};
+    }
+    return next;
+  }
+
+  async function writeKey(key, value) {
+    const { error } = await supabase
+      .from('camping_data')
+      .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+    if (error) throw error;
+  }
+
+  async function ensureSeed() {
+    const sharedEmpty = !state.shared || !Object.keys(state.shared).length;
+    const personalEmpty = !state.personal || !Object.keys(state.personal).length;
+    if (!sharedEmpty && !personalEmpty) return;
+
+    if (sharedEmpty) {
+      const seeded = {};
+      SEED_SHARED.forEach((name) => {
+        const id = 'sh_' + Math.random().toString(36).slice(2, 9);
+        seeded[id] = { name, claims: {}, addedBy: 'system', addedAt: Date.now() };
+      });
+      state.shared = seeded;
+      await writeKey('shared', seeded);
+    }
+    if (personalEmpty) {
+      const seeded = {};
+      Object.keys(FAMILIES).forEach((fam) => {
+        seeded[fam] = {};
+        SEED_PERSONAL.forEach((name) => {
+          const id = 'pr_' + Math.random().toString(36).slice(2, 9);
+          seeded[fam][id] = { name, checked: false, addedBy: 'system', addedAt: Date.now() };
+        });
+      });
+      state.personal = seeded;
+      await writeKey('personal', seeded);
+    }
+  }
+
+  // ─── Mutations (optimistic local update + write-back) ───
+  async function mutate(key, mutator) {
+    mutator(state[key]);
+    render();
+    try {
+      await writeKey(key, state[key]);
+    } catch (e) {
+      console.error('write failed', e);
+      setSyncStatus('שגיאת סנכרון — נסו שוב', false);
+    }
+  }
+
+  function addSharedItem(name) {
+    const id = 'sh_' + Math.random().toString(36).slice(2, 9);
+    return mutate('shared', (s) => {
+      s[id] = { name, claims: {}, addedBy: currentFamily || 'guest', addedAt: Date.now() };
+    });
+  }
+
+  function deleteSharedItem(id) {
+    return mutate('shared', (s) => { delete s[id]; });
+  }
+
+  function toggleClaim(itemId, family) {
+    return mutate('shared', (s) => {
+      const item = s[itemId];
+      if (!item) return;
+      if (!item.claims) item.claims = {};
+      if (item.claims[family]) {
+        delete item.claims[family];
+      } else {
+        item.claims[family] = { at: Date.now() };
+      }
+    });
+  }
+
+  function addPersonalItem(family, name) {
+    const id = 'pr_' + Math.random().toString(36).slice(2, 9);
+    return mutate('personal', (p) => {
+      if (!p[family]) p[family] = {};
+      p[family][id] = { name, checked: false, addedBy: currentFamily || 'guest', addedAt: Date.now() };
+    });
+  }
+
+  function deletePersonalItem(family, id) {
+    return mutate('personal', (p) => {
+      if (p[family]) delete p[family][id];
+    });
+  }
+
+  function togglePersonalChecked(family, id) {
+    return mutate('personal', (p) => {
+      const item = p[family]?.[id];
+      if (!item) return;
+      item.checked = !item.checked;
+    });
+  }
+
+  // ─── Render ───
+  function render() {
+    renderFamilyChips();
+    renderShared();
+    renderPersonal();
+    renderBadges();
+  }
+
+  function renderFamilyChips() {
+    document.querySelectorAll('.family-chip').forEach(el => {
+      el.classList.toggle('active', el.dataset.family === currentFamily);
+    });
+    $('pickFamilyBanner').style.display = currentFamily ? 'none' : 'block';
+  }
+
+  function renderShared() {
+    const list = $('sharedList');
+    const items = Object.entries(state.shared || {}).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
+    if (!items.length) {
+      list.innerHTML = '<div class="empty">אין עדיין פריטים — הוסיפו את הראשון 🍔</div>';
+    } else {
+      list.innerHTML = items.map(([id, item]) => sharedItemHtml(id, item)).join('');
+    }
+    $('sharedCount').textContent = items.length + ' פריטים';
+    list.querySelectorAll('[data-claim-toggle]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!currentFamily) { alert('בחרו את המשפחה שלכם בראש העמוד'); return; }
+        toggleClaim(btn.dataset.itemId, currentFamily);
+      });
+    });
+    list.querySelectorAll('[data-claim-remove]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleClaim(btn.dataset.itemId, btn.dataset.family);
+      });
+    });
+    list.querySelectorAll('[data-delete-shared]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (confirm('למחוק את הפריט?')) deleteSharedItem(btn.dataset.id);
+      });
+    });
+  }
+
+  function sharedItemHtml(id, item) {
+    const claims = item.claims || {};
+    const claimChips = Object.keys(claims).map(fam => `
+      <span class="claim-chip ${fam}" data-claim-remove data-item-id="${id}" data-family="${fam}" title="לחצו להסרה">
+        ${escapeHtml(FAMILIES[fam]?.short || fam)}
+        <span class="x">×</span>
+      </span>
+    `).join('');
+    const myClaim = currentFamily && claims[currentFamily];
+    const claimBtn = currentFamily ? `
+      <button class="btn-claim ${myClaim ? 'claimed' : ''}" data-claim-toggle data-item-id="${id}">
+        ${myClaim ? '✓ אני מביא' : '+ אני מביא'}
+      </button>
+    ` : `<button class="btn-claim" data-claim-toggle data-item-id="${id}">בחרו משפחה</button>`;
+    return `
+      <div class="item-row">
+        <div class="item-name">${escapeHtml(item.name)}</div>
+        <div class="item-claims">${claimChips}</div>
+        ${claimBtn}
+        <button class="btn-icon" data-delete-shared data-id="${id}" title="מחק">🗑</button>
+      </div>
+    `;
+  }
+
+  function renderPersonal() {
+    document.querySelectorAll('.person-tab').forEach(el => {
+      el.classList.toggle('active', el.dataset.family === currentPersonalView);
+    });
+    Object.keys(FAMILIES).forEach(fam => {
+      const items = Object.values(state.personal?.[fam] || {});
+      const checked = items.filter(i => i.checked).length;
+      const el = $('prog-' + fam);
+      if (el) el.textContent = `${checked}/${items.length}`;
+    });
+
+    const list = $('personalList');
+    const fam = currentPersonalView;
+    const familyItems = state.personal?.[fam] || {};
+    const items = Object.entries(familyItems).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
+    $('personalTitle').innerHTML = `🎒 ציוד אישי — ${escapeHtml(FAMILIES[fam].label)}`;
+    $('personalCount').textContent = items.length + ' פריטים';
+
+    const isMyFamily = currentFamily === fam;
+    if (!items.length) {
+      list.innerHTML = '<div class="empty">אין עדיין פריטים — הוסיפו את הראשון 🎒</div>';
+    } else {
+      list.innerHTML = items.map(([id, item]) => `
+        <div class="check-row" data-checked="${item.checked ? 'true' : 'false'}" data-id="${id}" ${isMyFamily ? '' : 'style="cursor:default;"'}>
+          <div class="checkbox"></div>
+          <div class="item-name ${item.checked ? 'checked' : ''}">${escapeHtml(item.name)}</div>
+          ${isMyFamily ? `<button class="btn-icon" data-delete-personal data-id="${id}" title="מחק">🗑</button>` : ''}
+        </div>
+      `).join('');
+    }
+
+    if (isMyFamily) {
+      list.querySelectorAll('.check-row').forEach(row => {
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('[data-delete-personal]')) return;
+          togglePersonalChecked(fam, row.dataset.id);
+        });
+      });
+      list.querySelectorAll('[data-delete-personal]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (confirm('למחוק את הפריט?')) deletePersonalItem(fam, btn.dataset.id);
+        });
+      });
+    }
+  }
+
+  function renderBadges() {
+    $('sharedBadge').textContent = Object.keys(state.shared || {}).length;
+    if (currentFamily) {
+      const items = Object.values(state.personal?.[currentFamily] || {});
+      const checked = items.filter(i => i.checked).length;
+      $('personalBadge').textContent = `${checked}/${items.length}`;
+    } else {
+      const total = Object.values(state.personal || {}).reduce((s, fam) => s + Object.keys(fam || {}).length, 0);
+      $('personalBadge').textContent = total;
+    }
+  }
+
+  // ─── UI Wiring ───
+  document.querySelectorAll('.family-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      currentFamily = chip.dataset.family;
+      currentPersonalView = currentFamily;
+      localStorage.setItem('camping.family', currentFamily);
+      render();
+    });
+  });
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      currentTab = tab.dataset.tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + currentTab));
+    });
+  });
+
+  document.querySelectorAll('.person-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      currentPersonalView = tab.dataset.family;
+      renderPersonal();
+    });
+  });
+
+  $('sharedAddBtn').addEventListener('click', () => {
+    const v = $('sharedAddInput').value.trim();
+    if (!v) return;
+    addSharedItem(v);
+    $('sharedAddInput').value = '';
+  });
+  $('sharedAddInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('sharedAddBtn').click(); });
+
+  $('personalAddBtn').addEventListener('click', () => {
+    const v = $('personalAddInput').value.trim();
+    if (!v) return;
+    addPersonalItem(currentPersonalView, v);
+    $('personalAddInput').value = '';
+  });
+  $('personalAddInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('personalAddBtn').click(); });
+
+  // ─── Sync status ───
+  function setSyncStatus(text, online) {
+    $('syncText').textContent = text;
+    $('syncDot').classList.toggle('offline', !online);
+  }
+
+  // ─── Realtime subscription ───
+  function subscribeRealtime() {
+    supabase
+      .channel('camping_data_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'camping_data' },
+        (payload) => {
+          const row = payload.new || payload.old;
+          if (!row || !row.key) return;
+          if (payload.eventType === 'DELETE') return;
+          state[row.key] = row.new?.value ?? payload.new?.value ?? {};
+          render();
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          setSyncStatus('מסונכרן בזמן אמת', true);
+        } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+          setSyncStatus('שגיאת חיבור — מצב מקומי', false);
+        }
+      });
+  }
+
+  // ─── Boot ───
+  async function boot() {
+    setSyncStatus('מתחבר...', false);
+    try {
+      state = await fetchAll();
+      await ensureSeed();
+      render();
+      subscribeRealtime();
+    } catch (e) {
+      console.error(e);
+      setSyncStatus('שגיאת חיבור — בדקו רשת', false);
+      render();
+    }
+  }
+
+  boot();
+</script>
+</body>
+</html>
