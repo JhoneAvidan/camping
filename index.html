@@ -381,7 +381,10 @@
   .list-header .count {
     font-size: 12px; color: var(--ink-soft); font-weight: 500;
   }
-  .list-items { padding: 2px 8px 8px; }
+  /* Hide redundant card header for shared/personal — bottom nav already conveys context + count */
+  #panel-shared .list-header,
+  #panel-personal .list-header { display: none; }
+  .list-items { padding: 6px 8px 8px; }
 
   /* ───────── Shared Item Row — Mobile First ───────── */
   .item-row {
@@ -572,25 +575,37 @@
   }
   .add-select:focus { outline: none; border-color: var(--forest); background: white; }
 
-  /* Category sections */
+  /* Category sections — clearly separated blocks */
+  .category-section {
+    background: rgba(245, 243, 235, 0.45);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 4px 6px 8px;
+    margin-bottom: 12px;
+  }
   .category-section + .category-section {
-    margin-top: 6px;
+    margin-top: 0;
     border-top: 1px solid var(--line);
-    padding-top: 6px;
+    padding-top: 4px;
   }
   .category-header {
-    padding: 12px 8px 6px;
+    padding: 10px 12px;
     display: flex; align-items: center; gap: 8px;
-    font-size: 13px; font-weight: 700;
+    font-size: 14.5px; font-weight: 800;
     color: var(--forest-deep);
     letter-spacing: 0.1px;
+    background: linear-gradient(to right, transparent, rgba(30, 107, 77, 0.10));
+    border-radius: var(--radius-sm);
+    margin-bottom: 4px;
+    border-right: 3px solid var(--forest);
   }
-  .category-header .cat-emoji { font-size: 16px; }
+  .category-header .cat-emoji { font-size: 18px; }
   .category-header .cat-count {
     margin-right: auto;
-    font-size: 11px; color: var(--ink-dim); font-weight: 600;
-    background: rgba(31, 41, 55, 0.05);
-    padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; color: white; font-weight: 700;
+    background: var(--forest);
+    padding: 3px 9px; border-radius: 999px;
+    min-width: 22px; text-align: center;
   }
   .category-empty {
     padding: 4px 12px 10px;
