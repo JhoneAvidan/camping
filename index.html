@@ -119,10 +119,13 @@
     flex-shrink: 0;
   }
   .hero h1 {
-    font-size: clamp(20px, 6vw, 28px);
+    font-size: clamp(18px, 5.4vw, 26px);
     font-weight: 900;
     letter-spacing: -0.3px;
     line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .hero .subtitle {
     color: rgba(255, 255, 255, 0.78);
@@ -136,11 +139,15 @@
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: 999px;
-    font-size: 12px; font-weight: 600;
+    font-size: 11px; font-weight: 600;
     border: 1px solid rgba(255, 255, 255, 0.18);
     flex-shrink: 0;
+  }
+  .sync-status .sync-text { display: none; }
+  @media (min-width: 420px) {
+    .sync-status .sync-text { display: inline; }
   }
   .sync-dot {
     width: 7px; height: 7px; border-radius: 50%;
@@ -154,6 +161,75 @@
     70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
     100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
   }
+
+  /* ───────── Hero corner avatar (Gmail-style) ───────── */
+  .me-avatar-wrap { position: relative; flex-shrink: 0; }
+  .me-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-weight: 800; font-size: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+  .me-avatar:hover { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25); }
+  .me-avatar:active { transform: scale(0.94); }
+  .me-avatar[data-family="avidan"]  { background: var(--avidan); }
+  .me-avatar[data-family="afsoa"]   { background: var(--afsoa); }
+  .me-avatar[data-family="weizman"] { background: var(--weizman); }
+  .me-avatar[data-family="sofer"]   { background: var(--sofer); }
+  .me-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    inset-inline-end: 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18);
+    padding: 12px;
+    min-width: 200px;
+    z-index: 60;
+    display: none;
+    color: var(--ink);
+    text-align: start;
+  }
+  .me-popover.open { display: block; animation: fadeIn 0.18s ease; }
+  .me-popover .me-pop-name {
+    font-size: 13px; font-weight: 700;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 10px;
+  }
+  .me-popover .me-pop-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .me-popover[data-family="avidan"]  .me-pop-dot { background: var(--avidan); }
+  .me-popover[data-family="afsoa"]   .me-pop-dot { background: var(--afsoa); }
+  .me-popover[data-family="weizman"] .me-pop-dot { background: var(--weizman); }
+  .me-popover[data-family="sofer"]   .me-pop-dot { background: var(--sofer); }
+  .me-popover .me-pop-logout {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    padding: 8px 12px;
+    min-height: 36px;
+    border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .me-popover .me-pop-logout:hover { border-color: #b91c1c; color: #b91c1c; background: #fef2f2; }
 
   /* ───────── Countdown to Friday 18:00 ───────── */
   .countdown {
@@ -212,39 +288,7 @@
   }
   .family-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-  /* ───────── Logged-in Pill — Mobile First ───────── */
-  .me-bar {
-    background: var(--paper);
-    border-radius: 999px;
-    padding: 6px 8px 6px 14px;
-    margin-bottom: 12px;
-    box-shadow: var(--shadow-sm);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 8px;
-    border: 1px solid var(--line);
-  }
-  .me-info {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 13px; color: var(--ink-soft);
-    min-width: 0; flex: 1;
-  }
-  .me-info > span:first-child {
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .me-info .me-name {
-    color: var(--ink); font-weight: 700;
-    display: inline-flex; align-items: center; gap: 6px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    min-width: 0;
-  }
-  .me-info .me-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .me-info[data-family="avidan"] .me-dot { background: var(--avidan); }
-  .me-info[data-family="afsoa"] .me-dot { background: var(--afsoa); }
-  .me-info[data-family="weizman"] .me-dot { background: var(--weizman); }
-  .me-info[data-family="sofer"] .me-dot { background: var(--sofer); }
+  /* ───────── Logout-style button (also used by admin refresh) ───────── */
   .btn-logout {
     background: transparent;
     border: 1px solid var(--line-strong);
@@ -265,62 +309,79 @@
     background: #fff;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    padding: 12px;
+    padding: 10px 12px;
     margin-bottom: 12px;
     box-shadow: var(--shadow-sm);
   }
-  .trip-info-row {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  .trip-row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 8px 12px;
   }
-  .trip-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #f4faf6;
-    border: 1px solid #d6ead8;
+  .trip-place {
+    display: inline-flex; align-items: center; gap: 8px;
+    flex: 1 1 180px;
+    min-width: 0;
     color: var(--forest-deep);
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 12px; font-weight: 600;
-    white-space: nowrap;
   }
-  .trip-chip .em { font-size: 14px; }
-  .trip-link-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 12px;
-    min-height: 36px;
-    border-radius: 999px;
-    font-size: 12px; font-weight: 700;
-    color: #fff;
-    text-decoration: none;
-    transition: filter 0.15s, transform 0.15s;
-    border: none;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
+  .trip-place-ico {
+    font-size: 18px; line-height: 1;
+    flex: 0 0 auto;
   }
-  .trip-link-btn:hover { filter: brightness(1.05); }
-  .trip-link-btn:active { transform: scale(0.96); }
-  .trip-link-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-  .trip-link-btn.waze { background: #33ccff; color: #003a55; }
-  .trip-link-btn.whatsapp { background: #25d366; color: #fff; }
-  .trip-info-meta {
-    margin-top: 8px;
-    display: flex; flex-wrap: wrap; gap: 4px 12px;
-    font-size: 11px; color: var(--ink-soft);
+  .trip-place-text {
+    display: flex; flex-direction: column;
+    min-width: 0; line-height: 1.15;
   }
-  .trip-info-meta strong { color: var(--ink); font-weight: 700; }
-  .trip-map-toggle {
-    margin-top: 8px;
-    background: transparent;
-    border: 1px dashed var(--line-strong);
+  .trip-place-name {
+    font-size: 14px; font-weight: 800;
+    color: var(--forest-deep);
+    letter-spacing: -0.1px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .trip-place-meta {
+    font-size: 11px; font-weight: 600;
     color: var(--ink-soft);
-    padding: 8px 14px;
-    min-height: 36px;
+    margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .trip-place-meta strong { color: var(--ink); font-weight: 800; }
+  .trip-actions {
+    display: inline-flex; flex-wrap: wrap;
+    align-items: center; gap: 6px;
+    flex: 0 1 auto; margin-inline-start: auto;
+  }
+  .trip-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 32px;
+    padding: 0 12px;
     border-radius: 999px;
-    font-size: 12px; font-weight: 600;
+    font-family: inherit;
+    font-size: 12px; font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: filter 0.15s, transform 0.15s, background 0.15s, color 0.15s;
     -webkit-tap-highlight-color: transparent;
   }
-  .trip-map-toggle:hover { background: #fafaf9; color: var(--ink); }
+  .trip-pill:active { transform: scale(0.96); }
+  .trip-pill-ico { font-size: 14px; line-height: 1; }
+  .trip-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .trip-pill-link.waze { background: #33ccff; color: #003a55; border-color: #1cb6ee; }
+  .trip-pill-link.whatsapp { background: #25d366; color: #fff; border-color: #1fbf5b; }
+  .trip-pill-link:hover { filter: brightness(1.05); }
+  .trip-pill-toggle {
+    background: #fff;
+    border-color: var(--line-strong);
+    color: var(--ink-soft);
+  }
+  .trip-pill-toggle:hover { background: var(--paper); color: var(--ink); }
+  .trip-pill-toggle[aria-expanded="true"] {
+    background: var(--forest);
+    color: #fff;
+    border-color: var(--forest);
+  }
   .trip-map {
     margin-top: 10px;
     border-radius: var(--radius-md);
@@ -432,6 +493,141 @@
   #panel-personal .list-header { display: none; }
   .list-items { padding: 6px 8px 8px; }
 
+  /* ───────── Shared Stats Strip — total / unassigned / mine ───────── */
+  .shared-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px 10px 4px;
+  }
+  .shared-stat {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 9px 6px 8px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1px;
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+  }
+  .shared-stat-num {
+    font-size: 19px; font-weight: 800;
+    color: var(--forest-deep);
+    line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+  }
+  .shared-stat-label {
+    font-size: 11px; font-weight: 700;
+    color: var(--ink-soft);
+    letter-spacing: 0.1px;
+  }
+  .shared-stat-mine { background: #ecfdf5; border-color: #a7e0c2; }
+  .shared-stat-mine .shared-stat-num { color: var(--forest); }
+  .shared-stat-mine .shared-stat-label { color: var(--forest-deep); }
+
+  .shared-stats-actions {
+    display: flex; justify-content: center;
+    padding: 6px 10px 2px;
+  }
+  .byfam-trigger {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: #fff;
+    color: var(--forest-deep);
+    font-family: inherit; font-size: 12px; font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .byfam-trigger:hover { background: var(--paper); border-color: var(--forest); }
+  .byfam-trigger:active { transform: scale(0.97); }
+  .byfam-trigger-ico { font-size: 14px; line-height: 1; }
+
+  /* ───────── Per-family Aggregation Modal ───────── */
+  .byfam-list {
+    display: flex; flex-direction: column;
+    gap: 12px;
+    margin: 4px 0 16px;
+  }
+  .byfam-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+    overflow: hidden;
+  }
+  .byfam-card-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .byfam-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 13px;
+    flex: 0 0 auto;
+  }
+  .byfam-dot[data-family="avidan"]  { background: var(--avidan); }
+  .byfam-dot[data-family="afsoa"]   { background: var(--afsoa); }
+  .byfam-dot[data-family="weizman"] { background: var(--weizman); }
+  .byfam-dot[data-family="sofer"]   { background: var(--sofer); }
+  .byfam-name {
+    flex: 1 1 auto;
+    font-size: 14px; font-weight: 800;
+    color: var(--ink);
+  }
+  .byfam-count {
+    font-size: 11px; font-weight: 700;
+    color: var(--ink-soft);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-variant-numeric: tabular-nums;
+  }
+  .byfam-card-body {
+    padding: 8px 10px 10px;
+  }
+  .byfam-cat {
+    margin-top: 8px;
+  }
+  .byfam-cat:first-child { margin-top: 0; }
+  .byfam-cat-head {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .byfam-cat-emoji { font-size: 13px; }
+  .byfam-items {
+    display: flex; flex-wrap: wrap;
+    gap: 4px 6px;
+  }
+  .byfam-item {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+    color: var(--ink);
+  }
+  .byfam-empty {
+    padding: 8px 4px;
+    color: var(--ink-soft);
+    font-size: 12px; font-style: italic;
+    text-align: center;
+  }
+  .shared-stat-warn[data-attention="true"] {
+    background: #fff4e0;
+    border-color: #f3ba6e;
+  }
+  .shared-stat-warn[data-attention="true"] .shared-stat-num { color: #b45309; }
+  .shared-stat-warn[data-attention="true"] .shared-stat-label { color: #92400e; }
+
   /* ───────── Shared Item Row — Mobile First ───────── */
   .item-row {
     display: flex; align-items: center; gap: 8px;
@@ -486,20 +682,28 @@
   .btn-claim:hover { border-style: solid; color: var(--forest); border-color: var(--forest); }
   .btn-claim:active { transform: scale(0.96); }
   .btn-claim.claimed { background: #d1fae5; color: #065f46; border: 1.5px solid #10b981; }
+  .btn-claim.claimed-avidan  { background: var(--avidan);  color: #fff; border-color: var(--avidan); }
+  .btn-claim.claimed-afsoa   { background: var(--afsoa);   color: #fff; border-color: var(--afsoa); }
+  .btn-claim.claimed-weizman { background: var(--weizman); color: #fff; border-color: var(--weizman); }
+  .btn-claim.claimed-sofer   { background: var(--sofer);   color: #fff; border-color: var(--sofer); }
+  .btn-claim.claimed:hover { filter: brightness(0.95); }
   .btn-icon {
     width: 36px; height: 36px;
     border: none; background: transparent;
-    color: var(--ink-dim); cursor: pointer;
+    color: var(--ink-soft); cursor: pointer;
     border-radius: 50%; transition: all 0.15s;
     display: flex; align-items: center; justify-content: center;
     font-size: 16px;
     flex-shrink: 0;
     -webkit-tap-highlight-color: transparent;
   }
-  .btn-icon:hover { background: #fee2e2; color: #b91c1c; }
+  .btn-icon:hover { background: var(--paper); color: var(--ink); }
   .btn-icon:active { transform: scale(0.92); }
-  .btn-icon-edit:hover { background: #dbeafe; color: #1d4ed8; }
-  .btn-icon-dup:hover { background: #fef3c7; color: #b45309; }
+  .btn-icon-menu {
+    font-size: 22px; line-height: 1;
+    letter-spacing: 1px;
+    color: var(--ink-dim);
+  }
 
   /* Drag handle */
   .drag-handle {
@@ -1039,6 +1243,44 @@
   }
   .modal-btn.ghost:hover { background: #f4f4f3; color: var(--ink); }
 
+  /* ───────── Action sheet (kebab menu) ───────── */
+  .modal-actions-sheet { padding-top: 22px; padding-bottom: calc(14px + var(--safe-bot)); }
+  .modal-actions-sheet h3 {
+    margin: 0 0 8px;
+    font-size: 13px; font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    text-align: center;
+  }
+  .action-list {
+    display: flex; flex-direction: column;
+    gap: 2px;
+    margin: 4px 0 12px;
+  }
+  .action-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 14px;
+    min-height: 56px;
+    border: none; background: transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    color: var(--ink);
+    text-align: start;
+    transition: background 0.12s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .action-row:hover { background: var(--paper); }
+  .action-row:active { background: var(--line); }
+  .action-ico {
+    font-size: 20px;
+    width: 28px; text-align: center;
+    flex: 0 0 28px;
+  }
+  .action-label { flex: 1 1 auto; }
+  .action-row.danger { color: #b91c1c; }
+  .action-row.danger:hover { background: #fef2f2; }
+
   /* ───────── Tablet (≥ 600px) — wider container, more breathing room ───────── */
   @media (min-width: 600px) {
     .app {
@@ -1050,15 +1292,20 @@
     }
     .hero { padding: 24px 28px; border-radius: var(--radius-xl); margin-bottom: 18px; }
     .hero-icon { font-size: 40px; }
-    .me-bar { padding: 10px 12px 10px 18px; margin-bottom: 18px; }
-    .me-info { font-size: 14px; }
-    .trip-info { padding: 14px 16px; margin-bottom: 16px; }
-    .trip-chip, .trip-link-btn { font-size: 13px; }
-    .trip-chip { padding: 6px 12px; }
+    .me-avatar { width: 40px; height: 40px; font-size: 15px; }
+    .trip-info { padding: 12px 16px; margin-bottom: 16px; }
+    .trip-place-name { font-size: 15px; }
+    .trip-place-meta { font-size: 12px; }
+    .trip-pill { height: 34px; padding: 0 14px; font-size: 13px; }
+    .trip-pill svg { width: 15px; height: 15px; }
     .list-card { border-radius: var(--radius-xl); margin-bottom: 16px; }
     .list-header { padding: 18px 20px 10px; }
     .list-header h2 { font-size: 19px; }
     .list-items { padding: 4px 12px 12px; }
+    .shared-stats { padding: 12px 14px 6px; gap: 10px; }
+    .shared-stat { padding: 11px 8px 10px; }
+    .shared-stat-num { font-size: 22px; }
+    .shared-stat-label { font-size: 12px; }
     .item-row { gap: 12px; padding: 12px 10px; flex-wrap: nowrap; }
     .item-row .item-name { flex: 1 1 auto; }
     .check-row { gap: 14px; padding: 12px 10px; }
@@ -1090,14 +1337,7 @@
     .hero .subtitle { font-size: 16px; margin-top: 4px; }
     .sync-status { padding: 10px 16px; font-size: 14px; }
     .sync-dot { width: 8px; height: 8px; }
-
-    .me-bar {
-      border-radius: var(--radius-lg);
-      padding: 14px 22px;
-      margin-bottom: 20px;
-    }
-    .me-info { font-size: 15px; gap: 10px; }
-    .me-info .me-dot { width: 12px; height: 12px; }
+    .me-avatar { width: 44px; height: 44px; font-size: 16px; }
     .btn-logout { padding: 7px 16px; font-size: 13px; min-height: 36px; }
 
     .trip-info { padding: 14px 18px; margin-bottom: 18px; }
@@ -1230,7 +1470,17 @@
       </div>
       <div class="sync-status" id="syncStatus">
         <div class="sync-dot offline" id="syncDot"></div>
-        <span id="syncText">מתחבר...</span>
+        <span class="sync-text" id="syncText">מתחבר...</span>
+      </div>
+      <div class="me-avatar-wrap">
+        <button class="me-avatar" id="meAvatar" type="button" data-family="" aria-haspopup="dialog" aria-expanded="false" title="החשבון שלי">–</button>
+        <div class="me-popover" id="mePopover" data-family="" role="dialog" aria-label="חשבון">
+          <div class="me-pop-name">
+            <span class="me-pop-dot"></span>
+            <span id="mePopName">—</span>
+          </div>
+          <button class="me-pop-logout" id="mePopLogout" type="button">התנתק</button>
+        </div>
       </div>
     </div>
     <div class="countdown" id="countdown" aria-label="ספירה לאחור עד ההתכנסות">
@@ -1244,40 +1494,39 @@
     </div>
   </header>
 
-  <!-- Logged-in indicator -->
-  <div class="me-bar">
-    <div class="me-info" id="meInfo" data-family="">
-      <span>👋 מחובר/ת כ:</span>
-      <span class="me-name"><span class="me-dot"></span><span id="meName">—</span></span>
-    </div>
-    <button class="btn-logout" id="btnLogout">התנתק</button>
-  </div>
-
   <!-- Trip info card -->
   <div class="trip-info" id="tripInfo">
-    <div class="trip-info-row">
-      <span class="trip-chip"><span class="em">👨‍👩‍👧‍👦</span> 8 מבוגרים · 6 ילדים</span>
-      <span class="trip-chip"><span class="em">📍</span> חניון פתחת נחל אורן</span>
-      <a class="trip-link-btn waze"
-         href="https://waze.com/ul/hsvbf5gqs2"
-         target="_blank" rel="noopener" title="פתח בוויז">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M20.7 12.6c.5-1 .8-2.1.8-3.2C21.5 5.3 17.4 2 12.4 2 7.7 2 3.8 4.9 3.3 8.7c-.3.2-.6.5-.8.9-.5.7-.5 1.7 0 2.4.3.5.8.8 1.4.9.4 2.5 2.4 4.6 5.3 5.6-.1.3-.1.6-.1.9 0 1.5 1.2 2.6 2.7 2.6s2.7-1.1 2.7-2.6c0-.1 0-.3-.1-.4h.6c0 .1-.1.3-.1.4 0 1.5 1.2 2.6 2.7 2.6 1.5 0 2.7-1.1 2.7-2.6 0-1-.6-1.9-1.4-2.3.7-.7 1.3-1.5 1.7-2.4l.1-.1zM9.5 9c.6 0 1.1.5 1.1 1.1S10.1 11.2 9.5 11.2 8.4 10.7 8.4 10.1 8.9 9 9.5 9zm5.5 0c.6 0 1.1.5 1.1 1.1s-.5 1.1-1.1 1.1-1.1-.5-1.1-1.1S14.4 9 15 9zm-3 7c-2 0-3.7-1.1-4.5-2.8-.1-.3.1-.6.4-.7.3-.1.6.1.7.4.6 1.3 1.9 2.1 3.4 2.1s2.8-.8 3.4-2.1c.1-.3.4-.4.7-.4.3.1.5.4.4.7C15.7 14.9 14 16 12 16z"/>
-        </svg>
-        Waze
-      </a>
-      <a class="trip-link-btn whatsapp"
-         href="https://chat.whatsapp.com/CDnEhs8F5oY2YDMx4BtuQX"
-         target="_blank" rel="noopener" title="קבוצת וואטסאפ">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.3 5.2 4.5 3.1 1.2 3.1.8 3.7.8.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 22c-1.7 0-3.3-.4-4.7-1.2L2 22l1.3-5.1C2.5 15.4 2 13.7 2 12 2 6.5 6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/>
-        </svg>
-        וואטסאפ
-      </a>
+    <div class="trip-row">
+      <div class="trip-place">
+        <span class="trip-place-ico" aria-hidden="true">📍</span>
+        <span class="trip-place-text">
+          <span class="trip-place-name">חניון פתחת נחל אורן</span>
+          <span class="trip-place-meta"><strong>8</strong> מבוגרים · <strong>6</strong> ילדים</span>
+        </span>
+      </div>
+      <div class="trip-actions">
+        <a class="trip-pill trip-pill-link waze"
+           href="https://waze.com/ul/hsvbf5gqs2"
+           target="_blank" rel="noopener" title="פתח בוויז">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.7 12.6c.5-1 .8-2.1.8-3.2C21.5 5.3 17.4 2 12.4 2 7.7 2 3.8 4.9 3.3 8.7c-.3.2-.6.5-.8.9-.5.7-.5 1.7 0 2.4.3.5.8.8 1.4.9.4 2.5 2.4 4.6 5.3 5.6-.1.3-.1.6-.1.9 0 1.5 1.2 2.6 2.7 2.6s2.7-1.1 2.7-2.6c0-.1 0-.3-.1-.4h.6c0 .1-.1.3-.1.4 0 1.5 1.2 2.6 2.7 2.6 1.5 0 2.7-1.1 2.7-2.6 0-1-.6-1.9-1.4-2.3.7-.7 1.3-1.5 1.7-2.4l.1-.1zM9.5 9c.6 0 1.1.5 1.1 1.1S10.1 11.2 9.5 11.2 8.4 10.7 8.4 10.1 8.9 9 9.5 9zm5.5 0c.6 0 1.1.5 1.1 1.1s-.5 1.1-1.1 1.1-1.1-.5-1.1-1.1S14.4 9 15 9zm-3 7c-2 0-3.7-1.1-4.5-2.8-.1-.3.1-.6.4-.7.3-.1.6.1.7.4.6 1.3 1.9 2.1 3.4 2.1s2.8-.8 3.4-2.1c.1-.3.4-.4.7-.4.3.1.5.4.4.7C15.7 14.9 14 16 12 16z"/>
+          </svg>
+          Waze
+        </a>
+        <a class="trip-pill trip-pill-link whatsapp"
+           href="https://chat.whatsapp.com/CDnEhs8F5oY2YDMx4BtuQX"
+           target="_blank" rel="noopener" title="קבוצת וואטסאפ">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.3 5.2 4.5 3.1 1.2 3.1.8 3.7.8.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 22c-1.7 0-3.3-.4-4.7-1.2L2 22l1.3-5.1C2.5 15.4 2 13.7 2 12 2 6.5 6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/>
+          </svg>
+          וואטסאפ
+        </a>
+        <button class="trip-pill trip-pill-toggle" id="tripMapToggle" type="button" aria-expanded="false" aria-controls="tripMap">
+          <span class="trip-pill-ico" aria-hidden="true">🗺</span>
+          <span id="tripMapToggleLabel">מפה</span>
+        </button>
+      </div>
     </div>
-    <button class="trip-map-toggle" id="tripMapToggle" type="button" aria-expanded="false" aria-controls="tripMap">
-      🗺 הצג מפה
-    </button>
     <div class="trip-map" id="tripMap"></div>
   </div>
 
@@ -1295,11 +1544,30 @@
         <h2>🍔 ציוד משותף</h2>
         <div class="count" id="sharedCount">0 פריטים</div>
       </div>
+      <div class="shared-stats" id="sharedStats" aria-label="סיכום מצב הרשימה">
+        <div class="shared-stat" id="statTotal">
+          <span class="shared-stat-num" data-stat="total">0</span>
+          <span class="shared-stat-label">סה״כ פריטים</span>
+        </div>
+        <div class="shared-stat shared-stat-warn" id="statUnassigned" data-attention="false">
+          <span class="shared-stat-num" data-stat="unassigned">0</span>
+          <span class="shared-stat-label">ללא שיוך</span>
+        </div>
+        <div class="shared-stat shared-stat-mine" id="statMine">
+          <span class="shared-stat-num" data-stat="mine">0</span>
+          <span class="shared-stat-label">מביא/ה</span>
+        </div>
+      </div>
+      <div class="shared-stats-actions">
+        <button class="byfam-trigger" id="byFamilyOpen" type="button">
+          <span class="byfam-trigger-ico" aria-hidden="true">📋</span>
+          <span>סיכום לפי משפחה</span>
+        </button>
+      </div>
       <div class="list-items" id="sharedList"></div>
       <div class="add-row">
         <input class="add-input" id="sharedAddInput" placeholder="הוסיפו רעיון חדש לרשימה המשותפת..." />
-        <select class="add-select" id="sharedAddCategory" title="קטגוריה (ברירת מחדל: זיהוי אוטומטי)">
-          <option value="">🤖 קטגוריה אוטומטית</option>
+        <select class="add-select" id="sharedAddCategory" title="בחרו קטגוריה">
           <option value="general">🎒 ציוד כללי</option>
           <option value="breakfast">🍳 ארוחת בוקר</option>
           <option value="dinner">🍔 ארוחת ערב</option>
@@ -1526,10 +1794,70 @@
     });
   })();
 
+  // ─── Shared item action sheet (kebab menu) ───
+  let currentActionItemId = null;
+  function openSharedActionSheet(id) {
+    currentActionItemId = id;
+    const sheet = $('sharedActionSheet');
+    if (sheet) sheet.classList.add('open');
+  }
+  function closeSharedActionSheet() {
+    const sheet = $('sharedActionSheet');
+    if (sheet) sheet.classList.remove('open');
+    currentActionItemId = null;
+  }
+  (() => {
+    const sheet = $('sharedActionSheet');
+    const editBtn = $('actionEditShared');
+    const dupBtn = $('actionDupShared');
+    const delBtn = $('actionDeleteShared');
+    const cancelBtn = $('actionSheetCancel');
+    if (!sheet || !editBtn || !dupBtn || !delBtn || !cancelBtn) return;
+    editBtn.addEventListener('click', () => {
+      const id = currentActionItemId;
+      closeSharedActionSheet();
+      if (id) editSharedItem(id);
+    });
+    dupBtn.addEventListener('click', () => {
+      const id = currentActionItemId;
+      closeSharedActionSheet();
+      if (id) duplicateSharedItem(id);
+    });
+    delBtn.addEventListener('click', () => {
+      const id = currentActionItemId;
+      closeSharedActionSheet();
+      if (id && confirm('למחוק את הפריט?')) deleteSharedItem(id);
+    });
+    cancelBtn.addEventListener('click', closeSharedActionSheet);
+    sheet.addEventListener('click', (e) => {
+      if (e.target === sheet) closeSharedActionSheet();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sheet.classList.contains('open')) closeSharedActionSheet();
+    });
+  })();
+
+  // ─── Per-family aggregation modal ───
+  (() => {
+    const modal = $('byFamilyModal');
+    const openBtn = $('byFamilyOpen');
+    const closeBtn = $('byFamilyClose');
+    if (!modal || !openBtn || !closeBtn) return;
+    openBtn.addEventListener('click', openByFamilyModal);
+    closeBtn.addEventListener('click', closeByFamilyModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeByFamilyModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeByFamilyModal();
+    });
+  })();
+
   // ─── Trip map (lazy-load iframe on first open) ───
   (() => {
     const toggle = $('tripMapToggle');
     const map = $('tripMap');
+    const label = $('tripMapToggleLabel');
     if (!toggle || !map) return;
     const MAP_SRC = 'https://maps.google.com/maps?q=' +
       encodeURIComponent('חניון פתחת נחל אורן') +
@@ -1537,7 +1865,7 @@
     toggle.addEventListener('click', () => {
       const isOpen = map.classList.toggle('open');
       toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      toggle.textContent = isOpen ? '🗺 הסתר מפה' : '🗺 הצג מפה';
+      if (label) label.textContent = isOpen ? 'הסתר מפה' : 'מפה';
       if (isOpen && !map.firstChild) {
         const f = document.createElement('iframe');
         f.src = MAP_SRC;
@@ -2155,13 +2483,97 @@
   }
 
   function renderMeBar() {
-    const info = $('meInfo');
-    if (!info) return;
-    info.dataset.family = currentFamily || '';
-    $('meName').textContent = currentFamily ? FAMILIES[currentFamily].label : '—';
+    const avatar = $('meAvatar');
+    const popover = $('mePopover');
+    const popName = $('mePopName');
+    if (!avatar || !popover) return;
+    const fam = currentFamily || '';
+    avatar.dataset.family = fam;
+    popover.dataset.family = fam;
+    const short = fam && FAMILIES[fam] ? FAMILIES[fam].short : '–';
+    avatar.textContent = short ? short.charAt(0) : '–';
+    avatar.setAttribute('aria-label', fam && FAMILIES[fam] ? `החשבון שלי — ${FAMILIES[fam].label}` : 'החשבון שלי');
+    if (popName) popName.textContent = fam && FAMILIES[fam] ? FAMILIES[fam].label : '—';
   }
 
   let sharedSortables = [];
+
+  function renderByFamily() {
+    const container = $('byFamilyList');
+    if (!container) return;
+    const sharedEntries = Object.entries(state.shared || {});
+    const html = Object.values(FAMILIES).map(fam => {
+      const famItems = sharedEntries.filter(([, item]) => item.claims?.[fam.id]);
+      const total = famItems.length;
+      const byCat = {};
+      for (const cat of CATEGORIES) byCat[cat.id] = [];
+      for (const [, item] of famItems) {
+        const cat = CATEGORY_BY_ID[item.category] ? item.category : DEFAULT_CATEGORY;
+        byCat[cat].push(item);
+      }
+      const initial = fam.short ? fam.short.charAt(0) : '?';
+      const body = total
+        ? CATEGORIES.map(cat => {
+            const items = byCat[cat.id];
+            if (!items.length) return '';
+            const pills = items
+              .map(it => `<span class="byfam-item">${escapeHtml(it.name || '')}</span>`)
+              .join('');
+            return `
+              <div class="byfam-cat">
+                <div class="byfam-cat-head">
+                  <span class="byfam-cat-emoji">${cat.emoji}</span>
+                  <span>${escapeHtml(cat.label)}</span>
+                </div>
+                <div class="byfam-items">${pills}</div>
+              </div>
+            `;
+          }).join('')
+        : '<div class="byfam-empty">עדיין לא נבחרו פריטים</div>';
+      return `
+        <div class="byfam-card">
+          <div class="byfam-card-head">
+            <span class="byfam-dot" data-family="${fam.id}">${escapeHtml(initial)}</span>
+            <span class="byfam-name">${escapeHtml(fam.label)}</span>
+            <span class="byfam-count">${total}</span>
+          </div>
+          <div class="byfam-card-body">${body}</div>
+        </div>
+      `;
+    }).join('');
+    container.innerHTML = html;
+  }
+
+  function openByFamilyModal() {
+    renderByFamily();
+    const m = $('byFamilyModal');
+    if (m) m.classList.add('open');
+  }
+  function closeByFamilyModal() {
+    const m = $('byFamilyModal');
+    if (m) m.classList.remove('open');
+  }
+
+  function updateSharedStats(allItems) {
+    const total = allItems.length;
+    let unassigned = 0;
+    let mine = 0;
+    for (const [, item] of allItems) {
+      const claims = item.claims || {};
+      const hasClaims = Object.keys(claims).length > 0;
+      if (!hasClaims) unassigned++;
+      if (currentFamily && claims[currentFamily]) mine++;
+    }
+    const setNum = (key, val) => {
+      const el = document.querySelector(`[data-stat="${key}"]`);
+      if (el) el.textContent = String(val);
+    };
+    setNum('total', total);
+    setNum('unassigned', unassigned);
+    setNum('mine', mine);
+    const warn = $('statUnassigned');
+    if (warn) warn.dataset.attention = unassigned > 0 ? 'true' : 'false';
+  }
 
   function renderShared() {
     const list = $('sharedList');
@@ -2199,6 +2611,7 @@
     }
 
     $('sharedCount').textContent = allItems.length + ' פריטים';
+    updateSharedStats(allItems);
 
     list.querySelectorAll('[data-claim-toggle]').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -2212,16 +2625,11 @@
         toggleClaim(btn.dataset.itemId, btn.dataset.family);
       });
     });
-    list.querySelectorAll('[data-delete-shared]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (confirm('למחוק את הפריט?')) deleteSharedItem(btn.dataset.id);
+    list.querySelectorAll('[data-shared-menu]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openSharedActionSheet(btn.dataset.id);
       });
-    });
-    list.querySelectorAll('[data-edit-shared]').forEach(btn => {
-      btn.addEventListener('click', () => editSharedItem(btn.dataset.id));
-    });
-    list.querySelectorAll('[data-dup-shared]').forEach(btn => {
-      btn.addEventListener('click', () => duplicateSharedItem(btn.dataset.id));
     });
 
     // Init Sortable on each category body — drag between categories changes the item's category.
@@ -2266,9 +2674,10 @@
       </span>
     `).join('');
     const myClaim = claims[currentFamily];
+    const myShort = FAMILIES[currentFamily]?.short || 'אני מביא';
     const claimBtn = `
-      <button class="btn-claim ${myClaim ? 'claimed' : ''}" data-claim-toggle data-item-id="${id}">
-        ${myClaim ? '✓ אני מביא' : '+ אני מביא'}
+      <button class="btn-claim ${myClaim ? 'claimed' : ''} ${myClaim ? 'claimed-' + currentFamily : ''}" data-claim-toggle data-item-id="${id}" title="${myClaim ? 'בטל את השיבוץ שלך' : 'אני אביא את הפריט'}">
+        ${myClaim ? '✓ ' + escapeHtml(myShort) : '+ אני מביא'}
       </button>
     `;
     return `
@@ -2277,9 +2686,7 @@
         <div class="item-name">${escapeHtml(item.name)}</div>
         <div class="item-claims">${claimChips}</div>
         ${claimBtn}
-        <button class="btn-icon btn-icon-edit" data-edit-shared data-id="${id}" title="ערוך שם">✏️</button>
-        <button class="btn-icon btn-icon-dup" data-dup-shared data-id="${id}" title="שכפל פריט">📋</button>
-        <button class="btn-icon" data-delete-shared data-id="${id}" title="מחק">🗑</button>
+        <button class="btn-icon btn-icon-menu" data-shared-menu data-id="${id}" title="פעולות נוספות" aria-label="פעולות נוספות">⋯</button>
       </div>
     `;
   }
@@ -2393,11 +2800,35 @@
   }
 
   // ─── UI Wiring ───
-  $('btnLogout').addEventListener('click', () => {
+  function logout() {
     localStorage.removeItem('camping.family');
     localStorage.removeItem('camping.admin');
     location.reload();
-  });
+  }
+  (function wireMeAvatar() {
+    const avatar = $('meAvatar');
+    const popover = $('mePopover');
+    if (!avatar || !popover) return;
+    const close = () => {
+      popover.classList.remove('open');
+      avatar.setAttribute('aria-expanded', 'false');
+    };
+    avatar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = popover.classList.toggle('open');
+      avatar.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', (e) => {
+      if (!popover.classList.contains('open')) return;
+      if (popover.contains(e.target) || avatar.contains(e.target)) return;
+      close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+    const logoutBtn = $('mePopLogout');
+    if (logoutBtn) logoutBtn.addEventListener('click', logout);
+  })();
 
   $('adminFilterFamily').addEventListener('change', (e) => {
     adminFilterFamily = e.target.value;
@@ -2566,6 +2997,41 @@
   tickCountdown();
   setInterval(tickCountdown, 1000);
 </script>
+
+<!-- ═════════ Shared item action sheet ═════════ -->
+<div class="modal-overlay" id="sharedActionSheet" role="dialog" aria-modal="true" aria-labelledby="sharedActionTitle">
+  <div class="modal modal-actions-sheet" role="document">
+    <h3 id="sharedActionTitle">פעולות על הפריט</h3>
+    <div class="action-list">
+      <button class="action-row" id="actionEditShared" type="button">
+        <span class="action-ico">✏️</span>
+        <span class="action-label">ערוך שם וקטגוריה</span>
+      </button>
+      <button class="action-row" id="actionDupShared" type="button">
+        <span class="action-ico">📋</span>
+        <span class="action-label">שכפל פריט</span>
+      </button>
+      <button class="action-row danger" id="actionDeleteShared" type="button">
+        <span class="action-ico">🗑</span>
+        <span class="action-label">מחק פריט</span>
+      </button>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn ghost" id="actionSheetCancel" type="button" style="flex:1;">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════ Per-family aggregation modal ═════════ -->
+<div class="modal-overlay" id="byFamilyModal" role="dialog" aria-modal="true" aria-labelledby="byFamilyTitle">
+  <div class="modal" role="document">
+    <h3 id="byFamilyTitle">📋 סיכום לפי משפחה</h3>
+    <div class="byfam-list" id="byFamilyList"></div>
+    <div class="modal-actions">
+      <button class="modal-btn ghost" id="byFamilyClose" type="button" style="flex:1;">סגור</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═════════ Edit shared item modal ═════════ -->
 <div class="modal-overlay" id="editSharedModal" role="dialog" aria-modal="true" aria-labelledby="editSharedTitle">
