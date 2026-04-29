@@ -88,7 +88,7 @@
   .hero {
     background: linear-gradient(135deg, #1e6b4d 0%, #134e35 60%, #0d3a26 100%);
     border-radius: var(--radius-lg);
-    padding: 18px;
+    padding: 16px 18px;
     padding-inline-end: 72px;
     color: white;
     box-shadow: var(--shadow-lg);
@@ -110,23 +110,25 @@
     min-width: 0; flex: 1;
   }
   .hero-icon {
-    font-size: 32px;
+    font-size: 30px;
+    line-height: 1;
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
     flex-shrink: 0;
   }
   .hero h1 {
-    font-size: clamp(20px, 5.6vw, 26px);
-    font-weight: 900;
-    letter-spacing: -0.3px;
-    line-height: 1.15;
+    font-size: clamp(21px, 5.8vw, 26px);
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    line-height: 1.1;
     word-break: keep-all;
   }
   .hero .subtitle {
-    color: rgba(255, 255, 255, 0.78);
-    font-size: clamp(11px, 3vw, 13px);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
     font-weight: 500;
-    margin-top: 3px;
-    line-height: 1.35;
+    margin-top: 4px;
+    line-height: 1.3;
+    letter-spacing: 0.1px;
   }
   @keyframes pulse {
     0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
@@ -252,21 +254,22 @@
   /* ───────── Countdown to Friday 18:00 ───────── */
   .countdown {
     position: relative; z-index: 1;
-    margin-top: 14px;
-    padding: 12px 14px;
-    background: rgba(255, 255, 255, 0.10);
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--radius-md);
   }
   .countdown-label {
-    font-size: 11.5px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.88);
-    letter-spacing: 0.2px;
-    margin-bottom: 8px;
-    text-align: center;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-align: start;
   }
   .countdown-units {
     display: grid;
@@ -274,25 +277,26 @@
     gap: 6px;
   }
   .cu {
-    background: rgba(255, 255, 255, 0.10);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-sm);
-    padding: 8px 4px 6px;
+    padding: 6px 4px 5px;
     text-align: center;
   }
   .cu-num {
-    font-size: clamp(20px, 6vw, 26px);
-    font-weight: 900;
+    font-size: clamp(17px, 5vw, 21px);
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: white;
     line-height: 1;
+    letter-spacing: -0.3px;
   }
   .cu-lbl {
-    font-size: 10px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.72);
-    margin-top: 4px;
-    letter-spacing: 0.2px;
+    font-size: 9.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 3px;
+    letter-spacing: 0.3px;
   }
 
   /* ───────── Family Selector (legacy) ───────── */
@@ -1359,8 +1363,16 @@
         calc(var(--bottom-nav-h) + var(--safe-bot) + 24px)
         calc(20px + var(--safe-l));
     }
-    .hero { padding: 24px 28px; border-radius: var(--radius-xl); margin-bottom: 18px; }
-    .hero-icon { font-size: 40px; }
+    .hero { padding: 22px 26px; padding-inline-end: 84px; border-radius: var(--radius-xl); margin-bottom: 18px; }
+    .hero-title { gap: 14px; }
+    .hero-icon { font-size: 36px; }
+    .hero h1 { font-size: clamp(24px, 4vw, 30px); }
+    .hero .subtitle { font-size: 13px; }
+    .countdown { margin-top: 16px; padding: 12px 14px; }
+    .countdown-label { font-size: 11px; margin-bottom: 8px; }
+    .cu { padding: 8px 4px 6px; }
+    .cu-num { font-size: clamp(20px, 3vw, 24px); }
+    .cu-lbl { font-size: 10.5px; }
     .me-avatar { width: 40px; height: 40px; font-size: 15px; }
     .trip-info { padding: 12px 16px; margin-bottom: 16px; }
     .trip-place-name { font-size: 15px; }
@@ -1389,6 +1401,125 @@
     }
   }
 
+  /* ───────── Tile layout (≥ 700px) — categories sit side-by-side as elevated cards.
+     Each tile has a per-category color stripe + tinted header, generous padding, hover lift. */
+  @media (min-width: 700px) {
+    #sharedList {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+      align-items: start;
+      padding: 8px 4px 24px;
+    }
+    /* Tile card */
+    #sharedList > .category-section {
+      margin-bottom: 0;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfaf7 100%);
+      border: 1px solid rgba(31, 41, 55, 0.05);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    /* Per-category accent colors (default: forest) */
+    #sharedList > .category-section[data-category="breakfast"] { --cat-color: #f59e0b; --cat-tint: rgba(245, 158, 11, 0.12); }
+    #sharedList > .category-section[data-category="dinner"]    { --cat-color: #e85d04; --cat-tint: rgba(232, 93, 4, 0.10); }
+    #sharedList > .category-section[data-category="general"]   { --cat-color: #1e6b4d; --cat-tint: rgba(30, 107, 77, 0.10); }
+    /* Top color stripe — per-category identity */
+    #sharedList > .category-section::before {
+      content: '';
+      position: absolute;
+      top: 0; inset-inline-start: 0; inset-inline-end: 0;
+      height: 3px;
+      background: var(--cat-color, var(--forest));
+      opacity: 0.9;
+    }
+    #sharedList > .category-section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(31, 41, 55, 0.09);
+    }
+    /* Neutralize the mobile sibling-stripe rule when tiled */
+    #sharedList > .category-section + .category-section {
+      margin-top: 0;
+      border-top: 1px solid rgba(31, 41, 55, 0.05);
+      padding-top: 0;
+    }
+
+    /* Header — restored gradient + identity color, sized for the tile */
+    #sharedList > .category-section .category-header {
+      padding: 14px 16px 12px;
+      margin-bottom: 0;
+      font-size: 14px;
+      border-radius: 0;
+      border-right: none;
+      background: linear-gradient(to left, var(--cat-tint), transparent 75%);
+      color: var(--ink);
+      border-bottom: 1px solid rgba(31, 41, 55, 0.04);
+      gap: 9px;
+    }
+    #sharedList > .category-section .category-header .cat-emoji { font-size: 19px; line-height: 1; }
+    #sharedList > .category-section .category-header .cat-label { font-weight: 800; letter-spacing: 0.1px; }
+    #sharedList > .category-section .category-header .cat-count {
+      background: var(--cat-color, var(--forest));
+      color: white;
+      font-variant-numeric: tabular-nums;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    }
+
+    #sharedList > .category-section .category-body {
+      padding: 6px 8px 10px;
+    }
+
+    /* Item row: name on top, avatars below the name on the right (RTL: inline-start). */
+    #sharedList > .category-section .item-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas:
+        "handle name      menu"
+        ".      assignees .";
+      align-items: center;
+      column-gap: 8px;
+      row-gap: 4px;
+      padding: 9px 10px 8px;
+      min-height: 0;
+      border-radius: var(--radius-sm);
+      transition: background 0.15s;
+    }
+    #sharedList > .category-section .item-row:hover {
+      background: rgba(31, 41, 55, 0.025);
+    }
+    #sharedList > .category-section .item-row + .item-row {
+      border-top: 1px solid rgba(31, 41, 55, 0.04);
+    }
+    #sharedList > .category-section .item-row .drag-handle { grid-area: handle; }
+    #sharedList > .category-section .item-row .item-name   { grid-area: name; font-size: 14px; line-height: 1.3; font-weight: 600; }
+    #sharedList > .category-section .item-row .btn-icon-menu { grid-area: menu; }
+    #sharedList > .category-section .item-row .assignees {
+      grid-area: assignees;
+      justify-self: start;
+      gap: 4px;
+      min-height: 0;
+    }
+    #sharedList > .category-section .item-row .assignee-avatar,
+    #sharedList > .category-section .item-row .assignee-add {
+      width: 22px; height: 22px;
+      font-size: 10px;
+    }
+    #sharedList > .category-section .item-row .assignee-avatar + .assignee-avatar {
+      margin-inline-start: -7px;
+    }
+    #sharedList > .category-section .item-row .assignee-add-plus { font-size: 13px; }
+    #sharedList > .category-section .item-row .assignee-empty-hint { font-size: 10.5px; }
+
+    #sharedList > .category-section .category-empty {
+      padding: 10px 14px 14px;
+      font-size: 12px;
+    }
+  }
+
   /* ───────── Desktop (≥ 900px) — top pill tabs, centered modal ───────── */
   @media (min-width: 900px) {
     .app {
@@ -1398,14 +1529,25 @@
         calc(28px + var(--safe-bot))
         calc(28px + var(--safe-l));
     }
-    .hero { padding: 36px 40px; padding-inline-end: 96px; margin-bottom: 24px; }
+    .hero {
+      padding: 22px 28px;
+      padding-inline-end: 88px;
+      margin-bottom: 18px;
+      border-radius: var(--radius-xl);
+    }
     .hero-title { gap: 14px; }
-    .hero-icon { font-size: 48px; }
-    .hero h1 { font-size: 38px; letter-spacing: -0.5px; }
-    .hero .subtitle { font-size: 16px; margin-top: 4px; }
-    .me-avatar-wrap { top: 28px; inset-inline-end: 28px; }
-    .me-avatar { width: 52px; height: 52px; font-size: 18px; }
-    .me-avatar-status { width: 14px; height: 14px; }
+    .hero-icon { font-size: 32px; }
+    .hero h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.1; }
+    .hero .subtitle { font-size: 12.5px; margin-top: 4px; }
+    .countdown { margin-top: 12px; padding: 8px 10px; max-width: 360px; }
+    .countdown-label { font-size: 9.5px; margin-bottom: 5px; letter-spacing: 0.5px; }
+    .countdown-units { gap: 5px; }
+    .cu { padding: 5px 4px 4px; }
+    .cu-num { font-size: 16px; letter-spacing: -0.2px; }
+    .cu-lbl { font-size: 9px; margin-top: 2px; letter-spacing: 0.2px; }
+    .me-avatar-wrap { top: 22px; inset-inline-end: 22px; }
+    .me-avatar { width: 46px; height: 46px; font-size: 16px; }
+    .me-avatar-status { width: 12px; height: 12px; }
     .btn-logout { padding: 7px 16px; font-size: 13px; min-height: 36px; }
 
     .trip-info { padding: 14px 18px; margin-bottom: 18px; }
@@ -1494,7 +1636,7 @@
 
   /* ───────── Wide desktop (≥ 1200px) ───────── */
   @media (min-width: 1200px) {
-    .hero h1 { font-size: 42px; }
+    .hero h1 { font-size: 28px; }
   }
 
   /* ───────── Reduced motion ───────── */
