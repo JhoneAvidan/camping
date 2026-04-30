@@ -1518,10 +1518,12 @@
       padding: 6px 8px 10px;
     }
 
-    /* Item row: handle | name | assignees | menu — all inline. */
+    /* Item row: handle | name | assignees | menu — all inline.
+       Fixed-width assignees column so the avatar stack lines up across rows
+       regardless of whether the `+` button is present. */
     #sharedList > .category-section .item-row {
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      grid-template-columns: auto minmax(0, 1fr) 96px auto;
       grid-template-areas: "handle name assignees menu";
       align-items: center;
       column-gap: 8px;
@@ -1541,7 +1543,7 @@
     #sharedList > .category-section .item-row .btn-icon-menu { grid-area: menu; }
     #sharedList > .category-section .item-row .assignees {
       grid-area: assignees;
-      justify-self: end;
+      justify-self: stretch;
       gap: 4px;
       min-height: 0;
       flex-shrink: 0;
