@@ -259,7 +259,7 @@
   }
   .me-popover .me-pop-logout:hover { border-color: #b91c1c; color: #b91c1c; background: #fef2f2; }
 
-  /* ───────── Countdown to Friday 18:00 ───────── */
+  /* ───────── Countdown to Friday 16:00 ───────── */
   .countdown {
     position: relative; z-index: 1;
     margin-top: 12px;
@@ -493,6 +493,118 @@
   .tab.active .badge { background: var(--forest); }
   .tab-admin { color: #b45309; }
   .tab-admin.active { color: #92400e; background: rgba(245, 158, 11, 0.1); }
+
+  /* ───────── Ideas (feature requests) ───────── */
+  .ideas-add {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .ideas-add-textarea {
+    width: 100%;
+    min-height: 72px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  .ideas-add-textarea:focus {
+    outline: none;
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(30, 107, 77, 0.12);
+  }
+  .ideas-add-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .ideas-hint {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .ideas-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .idea-empty {
+    padding: 28px 16px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .idea-card {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .idea-card:last-child { border-bottom: none; }
+  .idea-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .idea-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .idea-fam {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .idea-text {
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .idea-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .idea-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .idea-status.proposed { background: rgba(31, 41, 55, 0.06); color: var(--ink-soft); }
+  .idea-status.approved { background: rgba(30, 107, 77, 0.12); color: var(--forest-deep); }
+  .idea-status.rejected { background: rgba(220, 38, 38, 0.10); color: #991b1b; }
+  .idea-status.done     { background: rgba(232, 93, 4, 0.12); color: #b45309; }
+  .idea-kebab {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .idea-kebab:hover { background: rgba(31, 41, 55, 0.06); color: var(--ink); }
 
   /* ───────── Lists ───────── */
   .panel { display: none; }
@@ -1734,7 +1846,7 @@
       <div class="hero-icon">🏕️</div>
       <div>
         <h1>קמפינג 2026</h1>
-        <div class="subtitle">מתכנסים יום שישי ב־18:00</div>
+        <div class="subtitle">מתכנסים מחר ב־16:00</div>
       </div>
     </div>
     <div class="me-avatar-wrap">
@@ -1805,6 +1917,7 @@
   <div class="tabs" role="tablist">
     <button class="tab active" data-tab="shared" aria-label="רשימה משותפת"><span class="nav-icon" aria-hidden="true">🍔</span><span class="nav-label">משותפת</span><span class="badge" id="sharedBadge">0</span></button>
     <button class="tab" data-tab="personal" aria-label="רשימה אישית"><span class="nav-icon" aria-hidden="true">🎒</span><span class="nav-label">אישית</span><span class="badge" id="personalBadge">0/0</span></button>
+    <button class="tab" data-tab="ideas" aria-label="רעיונות"><span class="nav-icon" aria-hidden="true">💡</span><span class="nav-label">רעיונות</span><span class="badge" id="ideasBadge">0</span></button>
     <button class="tab tab-admin" data-tab="admin" id="tabAdmin" style="display:none;" aria-label="ניהול"><span class="nav-icon" aria-hidden="true">🛠</span><span class="nav-label">ניהול</span><span class="badge" id="adminBadge">0</span></button>
   </div>
 
@@ -1860,6 +1973,24 @@
         <input class="add-input" id="personalAddInput" placeholder="הוסיפו פריט לרשימה האישית..." />
         <button class="btn-add" id="personalAddBtn">+ הוסף</button>
       </div>
+    </div>
+  </section>
+
+  <!-- Feature requests / ideas -->
+  <section class="panel" id="panel-ideas">
+    <div class="list-card">
+      <div class="list-header">
+        <h2>💡 רעיונות לפיצ'רים</h2>
+        <div class="count" id="ideasCount">0 רעיונות</div>
+      </div>
+      <div class="ideas-add">
+        <textarea class="ideas-add-textarea" id="ideaInput" placeholder="מה תרצו להוסיף לאפליקציה? תארו את הרעיון..." maxlength="500"></textarea>
+        <div class="ideas-add-row">
+          <span class="ideas-hint">כל המשפחות רואות את כל הרעיונות</span>
+          <button class="btn-add" id="ideaSubmitBtn">+ שלח רעיון</button>
+        </div>
+      </div>
+      <div class="ideas-list" id="ideasList"></div>
     </div>
   </section>
 
@@ -2026,7 +2157,7 @@
   }
 
   // ─── State ───
-  let state = { shared: {}, personal: {}, login_log: { entries: [] }, activity_log: { entries: [] } };
+  let state = { shared: {}, personal: {}, login_log: { entries: [] }, activity_log: { entries: [] }, feature_requests: {} };
   let currentFamily = localStorage.getItem('camping.family') || null;
   let isAdmin = localStorage.getItem('camping.admin') === '1';
   let currentTab = 'shared';
@@ -2228,15 +2359,16 @@
     const { data, error } = await supabase
       .from('camping_data')
       .select('key, value')
-      .in('key', ['shared', 'personal', 'login_log', 'activity_log']);
+      .in('key', ['shared', 'personal', 'login_log', 'activity_log', 'feature_requests']);
     if (error) throw error;
-    const next = { shared: {}, personal: {}, login_log: { entries: [] }, activity_log: { entries: [] } };
+    const next = { shared: {}, personal: {}, login_log: { entries: [] }, activity_log: { entries: [] }, feature_requests: {} };
     for (const row of data || []) {
       const isLog = row.key === 'login_log' || row.key === 'activity_log';
       next[row.key] = row.value || (isLog ? { entries: [] } : {});
     }
     if (!Array.isArray(next.login_log?.entries)) next.login_log = { entries: [] };
     if (!Array.isArray(next.activity_log?.entries)) next.activity_log = { entries: [] };
+    if (!next.feature_requests || typeof next.feature_requests !== 'object' || Array.isArray(next.feature_requests)) next.feature_requests = {};
     return next;
   }
 
@@ -2570,11 +2702,51 @@
     }
   }
 
+  // ─── Feature requests / ideas ───
+  const FEATURE_STATUSES = [
+    { id: 'proposed', emoji: '💭', label: 'הוצע' },
+    { id: 'approved', emoji: '✅', label: 'מאושר' },
+    { id: 'rejected', emoji: '❌', label: 'נדחה' },
+    { id: 'done',     emoji: '🎉', label: 'בוצע' },
+  ];
+  function getStatusMeta(id) {
+    return FEATURE_STATUSES.find(s => s.id === id) || FEATURE_STATUSES[0];
+  }
+  function newIdeaId() {
+    return 'idea_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+  }
+  function addFeatureRequest(text) {
+    const trimmed = (text || '').trim();
+    if (!trimmed) return;
+    const id = newIdeaId();
+    const idea = {
+      id,
+      text: trimmed.slice(0, 500),
+      family: currentFamily,
+      status: 'proposed',
+      createdAt: Date.now(),
+    };
+    mutate('feature_requests', fr => { fr[id] = idea; });
+    logActivity('idea_add', { id, family: currentFamily, text: idea.text });
+  }
+  function setFeatureStatus(id, status) {
+    if (!FEATURE_STATUSES.some(s => s.id === status)) return;
+    mutate('feature_requests', fr => {
+      if (fr[id]) fr[id].status = status;
+    });
+    logActivity('idea_status', { id, status });
+  }
+  function deleteFeatureRequest(id) {
+    mutate('feature_requests', fr => { delete fr[id]; });
+    logActivity('idea_delete', { id });
+  }
+
   // ─── Render ───
   function render() {
     renderMeBar();
     renderShared();
     renderPersonal();
+    renderIdeas();
     renderBadges();
     renderAdminTab();
     if (isAdmin) renderAdmin();
@@ -3198,6 +3370,49 @@
     });
   }
 
+  function renderIdeas() {
+    const list = $('ideasList');
+    const countEl = $('ideasCount');
+    if (!list) return;
+    const ideas = Object.values(state.feature_requests || {})
+      .filter(idea => idea && idea.id)
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    if (countEl) {
+      const n = ideas.length;
+      countEl.textContent = n === 1 ? 'רעיון אחד' : `${n} רעיונות`;
+    }
+    if (ideas.length === 0) {
+      list.innerHTML = '<div class="idea-empty">אין עדיין רעיונות. היו הראשונים להציע משהו!</div>';
+      return;
+    }
+    list.innerHTML = ideas.map(idea => {
+      const fam = FAMILIES[idea.family];
+      const famLabel = fam ? `${fam.emoji} ${fam.label}` : escapeHtml(idea.family || '');
+      const status = getStatusMeta(idea.status);
+      const when = fmtRelative(idea.createdAt);
+      const canManage = isAdmin || idea.family === currentFamily;
+      const kebab = canManage
+        ? `<button class="idea-kebab" data-idea-kebab="${escapeHtml(idea.id)}" aria-label="פעולות">⋯</button>`
+        : '';
+      return `
+        <div class="idea-card" data-idea-id="${escapeHtml(idea.id)}">
+          <div class="idea-head">
+            <div class="idea-meta">
+              <span class="idea-fam">${famLabel}</span>
+              <span>·</span>
+              <span>${escapeHtml(when)}</span>
+            </div>
+            ${kebab}
+          </div>
+          <div class="idea-text">${escapeHtml(idea.text || '')}</div>
+          <div class="idea-foot">
+            <span class="idea-status ${status.id}">${status.emoji} ${status.label}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
   function renderBadges() {
     $('sharedBadge').textContent = Object.keys(state.shared || {}).length;
     const fam = currentFamily;
@@ -3208,6 +3423,10 @@
       claimedItems.filter(it => it.packed?.[fam]).length;
     const total = personalItems.length + claimedItems.length;
     $('personalBadge').textContent = `${checked}/${total}`;
+    const ideasOpen = Object.values(state.feature_requests || {})
+      .filter(idea => idea && (idea.status === 'proposed' || idea.status === 'approved')).length;
+    const ideasBadgeEl = $('ideasBadge');
+    if (ideasBadgeEl) ideasBadgeEl.textContent = ideasOpen;
   }
 
   // ─── UI Wiring ───
@@ -3299,6 +3518,80 @@
     $('personalAddInput').value = '';
   });
   $('personalAddInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('personalAddBtn').click(); });
+
+  // ─── Ideas wiring ───
+  $('ideaSubmitBtn').addEventListener('click', () => {
+    if (!currentFamily) return;
+    const ta = $('ideaInput');
+    const v = (ta.value || '').trim();
+    if (!v) return;
+    addFeatureRequest(v);
+    ta.value = '';
+  });
+  $('ideaInput').addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      $('ideaSubmitBtn').click();
+    }
+  });
+  $('ideasList').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-idea-kebab]');
+    if (!btn) return;
+    const id = btn.dataset.ideaKebab;
+    openIdeaActionSheet(id);
+  });
+
+  let currentIdeaActionId = null;
+  function openIdeaActionSheet(id) {
+    const idea = (state.feature_requests || {})[id];
+    if (!idea) return;
+    currentIdeaActionId = id;
+    const sheet = $('ideaActionSheet');
+    const list = $('ideaActionList');
+    const canManage = isAdmin || idea.family === currentFamily;
+    const rows = [];
+    if (isAdmin) {
+      FEATURE_STATUSES.forEach(s => {
+        const isCurrent = s.id === idea.status;
+        const label = isCurrent ? `הסטטוס הנוכחי: ${s.label}` : `סמן כ-${s.label}`;
+        const attrs = isCurrent ? ' disabled style="opacity:0.45"' : '';
+        rows.push(`<button class="action-row" type="button" data-set-status="${s.id}"${attrs}>${s.emoji} ${label}</button>`);
+      });
+    }
+    if (canManage) {
+      rows.push(`<button class="action-row danger" type="button" data-delete-idea="1">🗑 מחק רעיון</button>`);
+    }
+    list.innerHTML = rows.join('') || '<div style="padding:14px;text-align:center;color:var(--ink-soft);font-size:13px;">אין פעולות זמינות</div>';
+    sheet.classList.add('open');
+  }
+  function closeIdeaActionSheet() {
+    const sheet = $('ideaActionSheet');
+    if (sheet) sheet.classList.remove('open');
+    currentIdeaActionId = null;
+  }
+  (() => {
+    const sheet = $('ideaActionSheet');
+    const closeBtn = $('ideaActionClose');
+    if (!sheet || !closeBtn) return;
+    sheet.addEventListener('click', (e) => {
+      if (e.target === sheet) { closeIdeaActionSheet(); return; }
+      const setBtn = e.target.closest('[data-set-status]');
+      if (setBtn && currentIdeaActionId) {
+        setFeatureStatus(currentIdeaActionId, setBtn.dataset.setStatus);
+        closeIdeaActionSheet();
+        return;
+      }
+      const delBtn = e.target.closest('[data-delete-idea]');
+      if (delBtn && currentIdeaActionId) {
+        if (confirm('למחוק את הרעיון?')) {
+          deleteFeatureRequest(currentIdeaActionId);
+        }
+        closeIdeaActionSheet();
+        return;
+      }
+    });
+    closeBtn.addEventListener('click', closeIdeaActionSheet);
+  })();
 
   // ─── Sync status ───
   function setSyncStatus(text, online) {
@@ -3493,5 +3786,15 @@
   </div>
 </div>
 
+<!-- ═════════ Idea action sheet ═════════ -->
+<div class="modal-overlay" id="ideaActionSheet" role="dialog" aria-modal="true" aria-labelledby="ideaActionTitle">
+  <div class="modal modal-actions-sheet" role="document">
+    <h3 id="ideaActionTitle">פעולות על הרעיון</h3>
+    <div class="action-list" id="ideaActionList"></div>
+    <div class="modal-actions">
+      <button class="modal-btn ghost" id="ideaActionClose" type="button" style="flex:1;">סגור</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
