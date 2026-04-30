@@ -2281,6 +2281,28 @@
     return p;
   }
 
+  // Persist the result of a drag: sets the moved item's category (if changed) and
+  // re-numbers sortIdx for every item currently in the destination category, in DOM order.
+  function reorderSharedAfterDrag(movedId, newCategory, orderedIds) {
+    const cat = CATEGORY_BY_ID[newCategory] ? newCategory : DEFAULT_CATEGORY;
+    const item = state.shared?.[movedId];
+    const fromCat = item?.category;
+    const name = item?.name;
+    const p = mutate('shared', (s) => {
+      if (s[movedId]) {
+        if (fromCat !== cat) {
+          s[movedId].category = cat;
+          s[movedId].classifiedAt = Date.now();
+        }
+      }
+      orderedIds.forEach((rid, idx) => {
+        if (s[rid]) s[rid].sortIdx = idx;
+      });
+    });
+    if (name && fromCat !== cat) logActivity('move_cat', { name, from: fromCat, to: cat });
+    return p;
+  }
+
   let editSharedTargetId = null;
 
   function editSharedItem(id) {
@@ -2809,7 +2831,12 @@
 
   function renderShared() {
     const list = $('sharedList');
-    const allItems = Object.entries(state.shared || {}).sort((a, b) => (a[1].addedAt || 0) - (b[1].addedAt || 0));
+    const allItems = Object.entries(state.shared || {}).sort((a, b) => {
+      const ai = Number.isFinite(a[1].sortIdx) ? a[1].sortIdx : Number.POSITIVE_INFINITY;
+      const bi = Number.isFinite(b[1].sortIdx) ? b[1].sortIdx : Number.POSITIVE_INFINITY;
+      if (ai !== bi) return ai - bi;
+      return (a[1].addedAt || 0) - (b[1].addedAt || 0);
+    });
 
     // Tear down any prior Sortable instances before rebuilding the DOM
     sharedSortables.forEach(s => { try { s.destroy(); } catch {} });
@@ -2893,7 +2920,11 @@
           onEnd: (evt) => {
             const id = evt.item.dataset.id;
             const newCat = evt.to.dataset.categoryBody;
-            if (id && newCat) setSharedCategory(id, newCat);
+            if (!id || !newCat) return;
+            const orderedIds = Array.from(evt.to.querySelectorAll(':scope > [data-id]'))
+              .map(el => el.dataset.id)
+              .filter(Boolean);
+            reorderSharedAfterDrag(id, newCat, orderedIds);
           },
         });
         sharedSortables.push(inst);
