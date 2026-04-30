@@ -86,21 +86,22 @@
 
   /* ───────── Hero — Mobile First ───────── */
   .hero {
-    background: linear-gradient(135deg, #1e6b4d 0%, #134e35 60%, #0d3a26 100%);
+    background-color: #134e35;
+    background-image:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 200' preserveAspectRatio='xMidYMax slice'><path fill='%23ffffff' fill-opacity='0.05' d='M0 130 L80 70 L140 105 L200 60 L260 95 L320 55 L380 90 L440 75 L480 100 L480 200 L0 200 Z'/><path fill='%23ffffff' fill-opacity='0.07' d='M0 160 L60 110 L120 145 L180 105 L250 140 L320 110 L390 140 L480 120 L480 200 L0 200 Z'/><g fill='%23ffffff' fill-opacity='0.10'><path d='M50 175 L40 155 L48 155 L40 140 L48 140 L42 125 L58 125 L52 140 L60 140 L52 155 L60 155 Z'/><path d='M110 180 L102 162 L108 162 L102 148 L108 148 L104 134 L116 134 L112 148 L118 148 L112 162 L118 162 Z'/><path d='M180 178 L168 158 L178 158 L168 142 L178 142 L171 128 L189 128 L182 142 L192 142 L182 158 L192 158 Z'/><path d='M260 182 L252 165 L258 165 L252 152 L258 152 L254 140 L266 140 L262 152 L268 152 L262 165 L268 165 Z'/><path d='M340 178 L330 158 L338 158 L330 142 L338 142 L334 128 L346 128 L342 142 L350 142 L342 158 L350 158 Z'/><path d='M410 182 L402 165 L408 165 L402 152 L408 152 L404 140 L416 140 L412 152 L418 152 L412 165 L418 165 Z'/></g></svg>"),
+      radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.18) 0%, transparent 45%),
+      radial-gradient(circle at 90% 90%, rgba(232, 93, 4, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #1e6b4d 0%, #134e35 60%, #0d3a26 100%);
+    background-size: 100% auto, 100% 100%, 100% 100%, 100% 100%;
+    background-position: bottom center, top left, top left, top left;
+    background-repeat: no-repeat;
     border-radius: var(--radius-lg);
-    padding: 16px 18px;
-    padding-inline-end: 72px;
+    padding: 18px 20px 16px;
+    padding-inline-start: 76px;
     color: white;
     box-shadow: var(--shadow-lg);
-    position: relative; overflow: hidden;
-    margin-bottom: 12px;
-  }
-  .hero::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      radial-gradient(circle at 90% 10%, rgba(245, 158, 11, 0.15) 0%, transparent 40%),
-      radial-gradient(circle at 10% 90%, rgba(232, 93, 4, 0.1) 0%, transparent 50%);
-    pointer-events: none;
+    position: relative;
+    margin-bottom: 14px;
   }
   .hero-title {
     display: flex; align-items: center; gap: 12px;
@@ -110,24 +111,31 @@
     min-width: 0; flex: 1;
   }
   .hero-icon {
-    font-size: 30px;
+    font-size: 32px;
     line-height: 1;
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
     flex-shrink: 0;
   }
   .hero h1 {
-    font-size: clamp(21px, 5.8vw, 26px);
+    font-size: clamp(22px, 5.8vw, 27px);
     font-weight: 800;
     letter-spacing: -0.4px;
     line-height: 1.1;
     word-break: keep-all;
   }
   .hero .subtitle {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 12px;
-    font-weight: 500;
-    margin-top: 4px;
-    line-height: 1.3;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(252, 211, 77, 0.92);
+    background: rgba(245, 158, 11, 0.14);
+    border: 1px solid rgba(245, 158, 11, 0.30);
+    padding: 3px 9px 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 7px;
+    line-height: 1.2;
     letter-spacing: 0.1px;
   }
   @keyframes pulse {
@@ -140,7 +148,7 @@
   .me-avatar-wrap {
     position: absolute;
     top: 14px;
-    inset-inline-end: 14px;
+    inset-inline-start: 14px;
     z-index: 4;
   }
   .me-avatar {
@@ -190,7 +198,7 @@
   .me-popover {
     position: absolute;
     top: calc(100% + 10px);
-    inset-inline-end: 0;
+    inset-inline-start: 0;
     background: #fff;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
@@ -256,16 +264,17 @@
     position: relative; z-index: 1;
     margin-top: 12px;
     padding: 10px 12px;
-    background: rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(232, 93, 4, 0.10) 100%);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(245, 158, 11, 0.28);
     border-radius: var(--radius-md);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
   .countdown-label {
     font-size: 10.5px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+    color: #fcd34d;
     letter-spacing: 0.6px;
     text-transform: uppercase;
     margin-bottom: 6px;
@@ -277,24 +286,24 @@
     gap: 6px;
   }
   .cu {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(15, 41, 28, 0.32);
+    border: 1px solid rgba(245, 158, 11, 0.22);
     border-radius: var(--radius-sm);
     padding: 6px 4px 5px;
     text-align: center;
   }
   .cu-num {
     font-size: clamp(17px, 5vw, 21px);
-    font-weight: 700;
+    font-weight: 800;
     font-variant-numeric: tabular-nums;
-    color: white;
+    color: #fef3c7;
     line-height: 1;
     letter-spacing: -0.3px;
   }
   .cu-lbl {
     font-size: 9.5px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+    color: rgba(252, 211, 77, 0.75);
     margin-top: 3px;
     letter-spacing: 0.3px;
   }
@@ -638,9 +647,15 @@
   .shared-stat-warn[data-attention="true"] .shared-stat-num { color: #b45309; }
   .shared-stat-warn[data-attention="true"] .shared-stat-label { color: #92400e; }
 
-  /* ───────── Shared Item Row — Mobile First ───────── */
+  /* ───────── Shared Item Row — Mobile First ─────────
+     Grid layout reserves a fixed-width "assignees lane" so the avatar circles
+     align vertically across rows regardless of how many people claimed an item
+     or how long the item name is. */
   .item-row {
-    display: flex; align-items: center; gap: 10px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) 110px auto;
+    align-items: center;
+    column-gap: 10px;
     padding: 10px 8px;
     min-height: var(--hit);
     border-radius: var(--radius-md);
@@ -1363,7 +1378,7 @@
         calc(var(--bottom-nav-h) + var(--safe-bot) + 24px)
         calc(20px + var(--safe-l));
     }
-    .hero { padding: 22px 26px; padding-inline-end: 84px; border-radius: var(--radius-xl); margin-bottom: 18px; }
+    .hero { padding: 22px 26px; padding-inline-start: 84px; border-radius: var(--radius-xl); margin-bottom: 18px; }
     .hero-title { gap: 14px; }
     .hero-icon { font-size: 36px; }
     .hero h1 { font-size: clamp(24px, 4vw, 30px); }
@@ -1387,8 +1402,7 @@
     .shared-stat { padding: 11px 8px 10px; }
     .shared-stat-num { font-size: 22px; }
     .shared-stat-label { font-size: 12px; }
-    .item-row { gap: 12px; padding: 12px 10px; flex-wrap: nowrap; }
-    .item-row .item-name { flex: 1 1 auto; }
+    .item-row { column-gap: 12px; padding: 12px 10px; }
     .check-row { gap: 14px; padding: 12px 10px; }
     .item-name { font-size: 15px; }
     .add-row { padding: 14px 12px; gap: 10px; }
@@ -1473,16 +1487,13 @@
       padding: 6px 8px 10px;
     }
 
-    /* Item row: name on top, avatars below the name on the right (RTL: inline-start). */
+    /* Item row: handle | name | assignees | menu — all inline. */
     #sharedList > .category-section .item-row {
       display: grid;
-      grid-template-columns: auto 1fr auto;
-      grid-template-areas:
-        "handle name      menu"
-        ".      assignees .";
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      grid-template-areas: "handle name assignees menu";
       align-items: center;
       column-gap: 8px;
-      row-gap: 4px;
       padding: 9px 10px 8px;
       min-height: 0;
       border-radius: var(--radius-sm);
@@ -1495,13 +1506,14 @@
       border-top: 1px solid rgba(31, 41, 55, 0.04);
     }
     #sharedList > .category-section .item-row .drag-handle { grid-area: handle; }
-    #sharedList > .category-section .item-row .item-name   { grid-area: name; font-size: 14px; line-height: 1.3; font-weight: 600; }
+    #sharedList > .category-section .item-row .item-name   { grid-area: name; font-size: 14px; line-height: 1.3; font-weight: 600; min-width: 0; }
     #sharedList > .category-section .item-row .btn-icon-menu { grid-area: menu; }
     #sharedList > .category-section .item-row .assignees {
       grid-area: assignees;
-      justify-self: start;
+      justify-self: end;
       gap: 4px;
       min-height: 0;
+      flex-shrink: 0;
     }
     #sharedList > .category-section .item-row .assignee-avatar,
     #sharedList > .category-section .item-row .assignee-add {
@@ -1531,21 +1543,36 @@
     }
     .hero {
       padding: 22px 28px;
-      padding-inline-end: 88px;
+      padding-inline-start: 88px;
       margin-bottom: 18px;
       border-radius: var(--radius-xl);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 28px;
+      align-items: center;
     }
-    .hero-title { gap: 14px; }
+    .hero-title { gap: 14px; min-width: 0; }
     .hero-icon { font-size: 32px; }
     .hero h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.3px; line-height: 1.1; }
     .hero .subtitle { font-size: 12.5px; margin-top: 4px; }
-    .countdown { margin-top: 12px; padding: 8px 10px; max-width: 360px; }
-    .countdown-label { font-size: 9.5px; margin-bottom: 5px; letter-spacing: 0.5px; }
+    .countdown {
+      margin-top: 0;
+      padding: 9px 12px 8px;
+      width: 268px;
+      align-self: center;
+      justify-self: end;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.20) 0%, rgba(232, 93, 4, 0.14) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.36);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        0 4px 14px rgba(0, 0, 0, 0.18);
+    }
+    .countdown-label { font-size: 9px; margin-bottom: 5px; letter-spacing: 0.6px; }
     .countdown-units { gap: 5px; }
     .cu { padding: 5px 4px 4px; }
     .cu-num { font-size: 16px; letter-spacing: -0.2px; }
-    .cu-lbl { font-size: 9px; margin-top: 2px; letter-spacing: 0.2px; }
-    .me-avatar-wrap { top: 22px; inset-inline-end: 22px; }
+    .cu-lbl { font-size: 8.5px; margin-top: 2px; letter-spacing: 0.2px; }
+    .me-avatar-wrap { top: 22px; inset-inline-start: 22px; }
     .me-avatar { width: 46px; height: 46px; font-size: 16px; }
     .me-avatar-status { width: 12px; height: 12px; }
     .btn-logout { padding: 7px 16px; font-size: 13px; min-height: 36px; }
