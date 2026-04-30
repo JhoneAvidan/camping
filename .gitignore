@@ -41,6 +41,7 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+.claude/
 
 # Supabase local
 supabase/.branches/
