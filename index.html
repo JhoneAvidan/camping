@@ -727,6 +727,13 @@
       0 6px 14px rgba(15, 23, 42, 0.22);
   }
   .assignee-avatar:active { transform: translateY(0) scale(0.94); filter: brightness(0.95); }
+  .assignee-avatar.locked { cursor: default; }
+  .assignee-avatar.locked:hover {
+    transform: none;
+    box-shadow:
+      0 0 0 2px var(--card),
+      0 1px 3px rgba(15, 23, 42, 0.18);
+  }
   .assignee-avatar.is-me {
     box-shadow:
       0 0 0 2px var(--card),
@@ -2338,6 +2345,9 @@
   function toggleClaim(itemId, family) {
     const item = state.shared?.[itemId];
     const wasClaimed = !!item?.claims?.[family];
+    if (wasClaimed && family !== currentFamily && !isAdmin) {
+      return Promise.resolve();
+    }
     const name = item?.name;
     const p = mutate('shared', (s) => {
       const it = s[itemId];
@@ -2907,18 +2917,32 @@
       const f = FAMILIES[fam];
       const initial = f?.short ? f.short.charAt(0) : '?';
       const isMe = fam === currentFamily;
+      const canRemove = isMe || isAdmin;
       const title = isMe
         ? `שובצת לפריט (${escapeHtml(f.label)}) — לחצו להסרה`
-        : `שובץ ע"י ${escapeHtml(f.label)} — לחצו להסרה`;
+        : (canRemove
+            ? `שובץ ע"י ${escapeHtml(f.label)} — לחצו להסרה (מנהל)`
+            : `שובץ ע"י ${escapeHtml(f.label)}`);
+      if (canRemove) {
+        return `
+          <button class="assignee-avatar ${isMe ? 'is-me' : ''}"
+                  data-family="${fam}"
+                  data-claim-remove data-item-id="${id}"
+                  style="z-index:${10 - i}"
+                  title="${title}"
+                  aria-label="${title}">
+            ${escapeHtml(initial)}
+          </button>
+        `;
+      }
       return `
-        <button class="assignee-avatar ${isMe ? 'is-me' : ''}"
-                data-family="${fam}"
-                data-claim-remove data-item-id="${id}"
-                style="z-index:${10 - i}"
-                title="${title}"
-                aria-label="${title}">
+        <span class="assignee-avatar locked"
+              data-family="${fam}"
+              style="z-index:${10 - i}"
+              title="${title}"
+              aria-label="${title}">
           ${escapeHtml(initial)}
-        </button>
+        </span>
       `;
     }).join('');
 
