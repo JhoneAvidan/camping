@@ -1376,6 +1376,30 @@
   .action-row.danger { color: #b91c1c; }
   .action-row.danger:hover { background: #fef2f2; }
 
+  /* Admin family assignment sheet */
+  .assign-family-row { gap: 12px; }
+  .assign-family-row[data-claimed="1"] { background: var(--paper); }
+  .assign-fam-avatar {
+    flex: 0 0 32px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 13px; font-weight: 800;
+    background: var(--ink-dim);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+  }
+  .assign-fam-avatar[data-family="avidan"]  { background: linear-gradient(135deg, #60a5fa, var(--avidan)); }
+  .assign-fam-avatar[data-family="afsoa"]   { background: linear-gradient(135deg, #c084fc, var(--afsoa)); }
+  .assign-fam-avatar[data-family="weizman"] { background: linear-gradient(135deg, #34d399, var(--weizman)); }
+  .assign-fam-avatar[data-family="sofer"]   { background: linear-gradient(135deg, #f87171, var(--sofer)); }
+  .assign-fam-state {
+    flex: 0 0 24px;
+    text-align: center;
+    font-size: 18px; font-weight: 800;
+    color: var(--accent, #16a34a);
+  }
+
   /* ───────── Tablet (≥ 600px) — wider container, more breathing room ───────── */
   @media (min-width: 600px) {
     .app {
@@ -2044,6 +2068,8 @@
   function openSharedActionSheet(id) {
     currentActionItemId = id;
     const sheet = $('sharedActionSheet');
+    const assignBtn = $('actionAssignFamily');
+    if (assignBtn) assignBtn.style.display = isAdmin ? '' : 'none';
     if (sheet) sheet.classList.add('open');
   }
   function closeSharedActionSheet() {
@@ -2056,6 +2082,7 @@
     const editBtn = $('actionEditShared');
     const dupBtn = $('actionDupShared');
     const delBtn = $('actionDeleteShared');
+    const assignBtn = $('actionAssignFamily');
     const cancelBtn = $('actionSheetCancel');
     if (!sheet || !editBtn || !dupBtn || !delBtn || !cancelBtn) return;
     editBtn.addEventListener('click', () => {
@@ -2073,12 +2100,84 @@
       closeSharedActionSheet();
       if (id && confirm('למחוק את הפריט?')) deleteSharedItem(id);
     });
+    if (assignBtn) {
+      assignBtn.addEventListener('click', () => {
+        const id = currentActionItemId;
+        closeSharedActionSheet();
+        if (id) openAssignFamilySheet(id);
+      });
+    }
     cancelBtn.addEventListener('click', closeSharedActionSheet);
     sheet.addEventListener('click', (e) => {
       if (e.target === sheet) closeSharedActionSheet();
     });
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && sheet.classList.contains('open')) closeSharedActionSheet();
+    });
+  })();
+
+  // ─── Admin: assign families to a shared item ───
+  let assignSheetItemId = null;
+  function openAssignFamilySheet(id) {
+    if (!isAdmin) return;
+    const item = state.shared?.[id];
+    if (!item) return;
+    assignSheetItemId = id;
+    const sheet = $('assignFamilySheet');
+    const title = $('assignFamilyTitle');
+    const list = $('assignFamilyList');
+    if (!sheet || !list) return;
+    if (title) title.textContent = `שבץ משפחה — ${item.name || ''}`;
+    list.innerHTML = Object.values(FAMILIES).map(f => {
+      const initial = (f.short || '?').charAt(0);
+      return `
+        <button class="action-row assign-family-row" type="button" data-family="${f.id}">
+          <span class="assign-fam-avatar" data-family="${f.id}">${escapeHtml(initial)}</span>
+          <span class="action-label">${escapeHtml(f.label)}</span>
+          <span class="assign-fam-state" aria-hidden="true"></span>
+        </button>
+      `;
+    }).join('');
+    list.querySelectorAll('.assign-family-row').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const fam = btn.dataset.family;
+        const id = assignSheetItemId;
+        if (!id || !fam) return;
+        await toggleClaim(id, fam);
+        refreshAssignFamilySheet();
+      });
+    });
+    refreshAssignFamilySheet();
+    sheet.classList.add('open');
+  }
+  function refreshAssignFamilySheet() {
+    const id = assignSheetItemId;
+    const list = $('assignFamilyList');
+    if (!id || !list) return;
+    const claims = state.shared?.[id]?.claims || {};
+    list.querySelectorAll('.assign-family-row').forEach(row => {
+      const fam = row.dataset.family;
+      const claimed = !!claims[fam];
+      row.dataset.claimed = claimed ? '1' : '0';
+      const tick = row.querySelector('.assign-fam-state');
+      if (tick) tick.textContent = claimed ? '✓' : '';
+    });
+  }
+  function closeAssignFamilySheet() {
+    const sheet = $('assignFamilySheet');
+    if (sheet) sheet.classList.remove('open');
+    assignSheetItemId = null;
+  }
+  (() => {
+    const sheet = $('assignFamilySheet');
+    const closeBtn = $('assignFamilyClose');
+    if (!sheet) return;
+    if (closeBtn) closeBtn.addEventListener('click', closeAssignFamilySheet);
+    sheet.addEventListener('click', (e) => {
+      if (e.target === sheet) closeAssignFamilySheet();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sheet.classList.contains('open')) closeAssignFamilySheet();
     });
   })();
 
@@ -3295,18 +3394,18 @@
     enterApp(currentFamily, 'auto');
   }
 
-  // ── Countdown to next Friday 18:00 ──
-  function nextFriday18() {
+  // ── Countdown to next Friday 16:00 ──
+  function nextFriday16() {
     const now = new Date();
     const t = new Date(now);
-    t.setHours(18, 0, 0, 0);
+    t.setHours(16, 0, 0, 0);
     const offset = (5 - now.getDay() + 7) % 7;
     t.setDate(t.getDate() + offset);
     if (t.getTime() <= now.getTime()) t.setDate(t.getDate() + 7);
     return t;
   }
   function tickCountdown() {
-    const target = nextFriday18();
+    const target = nextFriday16();
     const diff = Math.max(0, target - new Date());
     const d = Math.floor(diff / 86400000);
     const h = Math.floor((diff % 86400000) / 3600000);
@@ -3332,6 +3431,10 @@
         <span class="action-ico">📋</span>
         <span class="action-label">שכפל פריט</span>
       </button>
+      <button class="action-row" id="actionAssignFamily" type="button" style="display:none">
+        <span class="action-ico">👥</span>
+        <span class="action-label">שבץ משפחה</span>
+      </button>
       <button class="action-row danger" id="actionDeleteShared" type="button">
         <span class="action-ico">🗑</span>
         <span class="action-label">מחק פריט</span>
@@ -3339,6 +3442,17 @@
     </div>
     <div class="modal-actions">
       <button class="modal-btn ghost" id="actionSheetCancel" type="button" style="flex:1;">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════ Admin assign family sheet ═════════ -->
+<div class="modal-overlay" id="assignFamilySheet" role="dialog" aria-modal="true" aria-labelledby="assignFamilyTitle">
+  <div class="modal modal-actions-sheet" role="document">
+    <h3 id="assignFamilyTitle">שבץ משפחה</h3>
+    <div class="action-list" id="assignFamilyList"></div>
+    <div class="modal-actions">
+      <button class="modal-btn ghost" id="assignFamilyClose" type="button" style="flex:1;">סגור</button>
     </div>
   </div>
 </div>
