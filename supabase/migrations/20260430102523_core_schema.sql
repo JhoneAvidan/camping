@@ -1,14 +1,4 @@
--- ============================================================================
--- 0002 — Core normalized schema
--- ============================================================================
--- Tables for the multi-trip SaaS model. Replaces the localStorage blob from
--- the POC. Foreign keys are explicit; cascading rules favor data preservation
--- (audit_events never cascade) over cleanup convenience.
--- ============================================================================
-
--- ---------------------------------------------------------------------------
--- profiles : 1:1 with auth.users. Public-readable display info.
--- ---------------------------------------------------------------------------
+-- profiles
 create table public.profiles (
   id              uuid primary key references auth.users(id) on delete cascade,
   display_name    text not null check (length(display_name) between 1 and 80),
@@ -22,17 +12,14 @@ create table public.profiles (
 create index profiles_platform_role_idx on public.profiles (platform_role)
   where platform_role <> 'user';
 
--- ---------------------------------------------------------------------------
--- destinations : curated catalog of camping sites. Geo-located via PostGIS.
--- ---------------------------------------------------------------------------
+-- destinations
 create table public.destinations (
   id              uuid primary key default gen_random_uuid(),
   name            text not null,
   region          text,
   description     text,
-  -- WGS84 lon/lat. SRID 4326 lets us use ST_DWithin in meters via geography cast.
   location        extensions.geography(Point, 4326),
-  external_ref    text,                          -- optional INPA/RTAG identifier
+  external_ref    text,
   is_active       boolean not null default true,
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
@@ -43,13 +30,10 @@ create index destinations_location_gix on public.destinations
 create index destinations_active_idx on public.destinations (is_active)
   where is_active;
 
--- ---------------------------------------------------------------------------
--- categories : lookup table for item taxonomy (e.g., "אוהלים", "בישול").
--- Trip-scoped overrides allowed by leaving trip_id non-null; null = global.
--- ---------------------------------------------------------------------------
+-- categories
 create table public.categories (
   id              uuid primary key default gen_random_uuid(),
-  trip_id         uuid,                          -- FK added below (forward ref)
+  trip_id         uuid,
   kind            public.item_kind not null,
   name            text not null check (length(name) between 1 and 60),
   sort_order      smallint not null default 0,
@@ -61,10 +45,7 @@ create unique index categories_global_unique
   on public.categories (kind, name)
   where trip_id is null;
 
--- ---------------------------------------------------------------------------
--- trips : a single trip's metadata. Owned by a profile (creator) but
--- membership is via trip_members so transfer of ownership is possible.
--- ---------------------------------------------------------------------------
+-- trips
 create table public.trips (
   id              uuid primary key default gen_random_uuid(),
   name            text not null check (length(name) between 1 and 120),
@@ -82,14 +63,11 @@ create table public.trips (
 create index trips_created_by_idx on public.trips (created_by);
 create index trips_active_idx on public.trips (archived_at) where archived_at is null;
 
--- Backfill the categories.trip_id FK now that trips exists.
 alter table public.categories
   add constraint categories_trip_fk
   foreign key (trip_id) references public.trips(id) on delete cascade;
 
--- ---------------------------------------------------------------------------
--- trip_members : N:M between profiles and trips with a per-trip role.
--- ---------------------------------------------------------------------------
+-- trip_members
 create table public.trip_members (
   trip_id         uuid not null references public.trips(id) on delete cascade,
   profile_id      uuid not null references public.profiles(id) on delete cascade,
@@ -100,9 +78,7 @@ create table public.trip_members (
 
 create index trip_members_profile_idx on public.trip_members (profile_id);
 
--- ---------------------------------------------------------------------------
--- items : the core unit — gear/food/task line entries within a trip.
--- ---------------------------------------------------------------------------
+-- items
 create table public.items (
   id              uuid primary key default gen_random_uuid(),
   trip_id         uuid not null references public.trips(id) on delete cascade,
@@ -110,7 +86,7 @@ create table public.items (
   kind            public.item_kind not null,
   name            text not null check (length(name) between 1 and 200),
   quantity        smallint not null default 1 check (quantity > 0),
-  unit            text,                          -- e.g., "ק״ג", "יח׳"
+  unit            text,
   notes           text,
   sort_order      integer not null default 0,
   created_by      uuid not null references public.profiles(id) on delete restrict,
@@ -121,10 +97,7 @@ create table public.items (
 create index items_trip_idx on public.items (trip_id, sort_order);
 create index items_category_idx on public.items (category_id);
 
--- ---------------------------------------------------------------------------
--- item_claims : assignment of a member to an item. Multiple members may
--- claim the same item (e.g., shared cookout). 'packed' supersedes 'claimed'.
--- ---------------------------------------------------------------------------
+-- item_claims
 create table public.item_claims (
   item_id         uuid not null references public.items(id) on delete cascade,
   profile_id      uuid not null references public.profiles(id) on delete cascade,
@@ -140,9 +113,7 @@ create table public.item_claims (
 
 create index item_claims_profile_idx on public.item_claims (profile_id);
 
--- ---------------------------------------------------------------------------
--- trip_invitations : pending invites by email. Token-based join flow.
--- ---------------------------------------------------------------------------
+-- trip_invitations
 create table public.trip_invitations (
   id              uuid primary key default gen_random_uuid(),
   trip_id         uuid not null references public.trips(id) on delete cascade,
@@ -161,16 +132,13 @@ create unique index trip_invitations_pending_unique
   on public.trip_invitations (trip_id, email)
   where status = 'pending';
 
--- ---------------------------------------------------------------------------
--- audit_events : append-only log. No cascading delete — audit must outlive
--- the rows it references. actor_id is nullable for system events.
--- ---------------------------------------------------------------------------
+-- audit_events (no cascading FKs)
 create table public.audit_events (
   id              bigint generated always as identity primary key,
-  trip_id         uuid,                          -- nullable: platform-level events
-  actor_id        uuid,                          -- nullable: system events
-  action          text not null,                 -- e.g., 'item.create'
-  target_kind     text,                          -- e.g., 'item'
+  trip_id         uuid,
+  actor_id        uuid,
+  action          text not null,
+  target_kind     text,
   target_id       uuid,
   payload         jsonb,
   created_at      timestamptz not null default now()
@@ -179,9 +147,7 @@ create table public.audit_events (
 create index audit_events_trip_idx on public.audit_events (trip_id, created_at desc);
 create index audit_events_actor_idx on public.audit_events (actor_id, created_at desc);
 
--- ---------------------------------------------------------------------------
--- updated_at trigger : keep timestamps fresh on row mutations.
--- ---------------------------------------------------------------------------
+-- updated_at trigger
 create or replace function public.tg_set_updated_at()
 returns trigger language plpgsql as $$
 begin

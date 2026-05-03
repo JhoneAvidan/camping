@@ -1,16 +1,4 @@
--- ============================================================================
--- 0003 — Row Level Security
--- ============================================================================
--- Enables RLS on every public table and defines the access policies. The core
--- authorization predicate is membership in trip_members; super_admins bypass.
---
--- Helper functions are SECURITY DEFINER so the RLS predicate on trip_members
--- itself doesn't recurse when other policies need to check membership.
--- ============================================================================
-
--- ---------------------------------------------------------------------------
--- Helpers
--- ---------------------------------------------------------------------------
+-- Helpers (SECURITY DEFINER to break recursion on trip_members)
 create or replace function public.is_platform_admin(uid uuid)
 returns boolean
 language sql stable security definer set search_path = public, auth as $$
@@ -51,9 +39,7 @@ grant execute on function public.is_platform_admin(uuid)         to authenticate
 grant execute on function public.is_trip_member(uuid, uuid)      to authenticated;
 grant execute on function public.has_trip_role(uuid, uuid, public.trip_role) to authenticated;
 
--- ---------------------------------------------------------------------------
 -- Enable RLS
--- ---------------------------------------------------------------------------
 alter table public.profiles         enable row level security;
 alter table public.destinations     enable row level security;
 alter table public.categories       enable row level security;
@@ -64,9 +50,7 @@ alter table public.item_claims      enable row level security;
 alter table public.trip_invitations enable row level security;
 alter table public.audit_events     enable row level security;
 
--- ---------------------------------------------------------------------------
--- profiles : self + admins fully; everyone else can read display info only.
--- ---------------------------------------------------------------------------
+-- profiles
 create policy profiles_select_public on public.profiles
   for select to authenticated using (true);
 
@@ -80,9 +64,7 @@ create policy profiles_admin_all on public.profiles
   using (public.is_platform_admin(auth.uid()))
   with check (public.is_platform_admin(auth.uid()));
 
--- ---------------------------------------------------------------------------
--- destinations : public catalog (anyone signed in can read); admin-only writes.
--- ---------------------------------------------------------------------------
+-- destinations
 create policy destinations_select_all on public.destinations
   for select to authenticated using (is_active or public.is_platform_admin(auth.uid()));
 
@@ -91,9 +73,7 @@ create policy destinations_admin_write on public.destinations
   using (public.is_platform_admin(auth.uid()))
   with check (public.is_platform_admin(auth.uid()));
 
--- ---------------------------------------------------------------------------
--- categories : global rows readable by all; trip-scoped rows by members.
--- ---------------------------------------------------------------------------
+-- categories
 create policy categories_select on public.categories
   for select to authenticated
   using (
@@ -118,9 +98,7 @@ create policy categories_admin_global on public.categories
   using (public.is_platform_admin(auth.uid()))
   with check (public.is_platform_admin(auth.uid()));
 
--- ---------------------------------------------------------------------------
--- trips : visible to members; mutable by editors; deletable by owners.
--- ---------------------------------------------------------------------------
+-- trips
 create policy trips_select_member on public.trips
   for select to authenticated
   using (public.is_trip_member(id, auth.uid()) or public.is_platform_admin(auth.uid()));
@@ -138,10 +116,7 @@ create policy trips_delete_owner on public.trips
   for delete to authenticated
   using (public.has_trip_role(id, auth.uid(), 'owner') or public.is_platform_admin(auth.uid()));
 
--- ---------------------------------------------------------------------------
--- trip_members : visible to fellow members; mutated by owners only.
--- The is_trip_member helper short-circuits the recursion risk here.
--- ---------------------------------------------------------------------------
+-- trip_members
 create policy trip_members_select on public.trip_members
   for select to authenticated
   using (public.is_trip_member(trip_id, auth.uid()) or public.is_platform_admin(auth.uid()));
@@ -151,9 +126,7 @@ create policy trip_members_owner_write on public.trip_members
   using (public.has_trip_role(trip_id, auth.uid(), 'owner') or public.is_platform_admin(auth.uid()))
   with check (public.has_trip_role(trip_id, auth.uid(), 'owner') or public.is_platform_admin(auth.uid()));
 
--- ---------------------------------------------------------------------------
--- items : members read; editors write.
--- ---------------------------------------------------------------------------
+-- items
 create policy items_select on public.items
   for select to authenticated
   using (public.is_trip_member(trip_id, auth.uid()) or public.is_platform_admin(auth.uid()));
@@ -166,9 +139,7 @@ create policy items_write_editor on public.items
     and created_by = auth.uid()
   );
 
--- ---------------------------------------------------------------------------
--- item_claims : self-claim by any member; owners/editors may un-claim others.
--- ---------------------------------------------------------------------------
+-- item_claims
 create policy item_claims_select on public.item_claims
   for select to authenticated
   using (
@@ -201,24 +172,16 @@ create policy item_claims_editor_override on public.item_claims
     )
   );
 
--- ---------------------------------------------------------------------------
--- trip_invitations : owners read/write; invitee may read by token (handled
--- via SECURITY DEFINER RPC, not direct table access).
--- ---------------------------------------------------------------------------
+-- trip_invitations
 create policy invitations_owner on public.trip_invitations
   for all to authenticated
   using (public.has_trip_role(trip_id, auth.uid(), 'owner') or public.is_platform_admin(auth.uid()))
   with check (public.has_trip_role(trip_id, auth.uid(), 'owner'));
 
--- ---------------------------------------------------------------------------
--- audit_events : append-only. Readable by trip members for their trip,
--- and by admins globally. INSERTs are handled by SECURITY DEFINER functions.
--- ---------------------------------------------------------------------------
+-- audit_events: SELECT only (writes via trusted RPCs)
 create policy audit_events_select_member on public.audit_events
   for select to authenticated
   using (
     (trip_id is not null and public.is_trip_member(trip_id, auth.uid()))
     or public.is_platform_admin(auth.uid())
   );
-
--- No INSERT/UPDATE/DELETE policies: audit writes go through trusted RPCs only.
