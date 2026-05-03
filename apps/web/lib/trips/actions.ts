@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -76,14 +77,21 @@ export async function createTrip(
     };
   }
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { userId, orgId } = await auth();
 
-  if (!user) {
+  if (!userId) {
     redirect("/login?next=/trips/new");
   }
+
+  if (!orgId) {
+    return {
+      status: "error",
+      message: "צריך לבחור קבוצה לפני שיוצרים טיול.",
+      values,
+    };
+  }
+
+  const supabase = await createClient();
 
   const { data: trip, error: insertError } = await supabase
     .from("trips")
@@ -92,7 +100,8 @@ export async function createTrip(
       starts_on: starts || null,
       ends_on: ends || null,
       notes: notesRaw || null,
-      created_by: user.id,
+      created_by: userId,
+      org_id: orgId,
     })
     .select("id")
     .single();
@@ -101,24 +110,6 @@ export async function createTrip(
     return {
       status: "error",
       message: "לא הצלחנו ליצור את הטיול. נסו שוב בעוד רגע.",
-      values,
-    };
-  }
-
-  const { error: memberError } = await supabase.from("trip_members").insert({
-    trip_id: trip.id,
-    profile_id: user.id,
-    role: "owner",
-  });
-
-  if (memberError) {
-    // Best-effort rollback: trip exists but membership failed. RLS on trips
-    // SELECT relies on is_trip_member, so the orphan trip will be invisible.
-    // Surface a friendly error and let the user retry.
-    return {
-      status: "error",
-      message:
-        "הטיול נוצר אבל הצירוף שלך כחבר נכשל. פנו לתמיכה אם זה קורה שוב.",
       values,
     };
   }

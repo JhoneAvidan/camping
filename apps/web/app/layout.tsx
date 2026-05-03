@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Heebo } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import { heIL } from "@clerk/localizations";
 import "./globals.css";
 
 const heebo = Heebo({
@@ -32,15 +34,17 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="he"
-      dir="rtl"
-      className={`${heebo.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
-        {children}
-      </body>
-    </html>
+    <ClerkProvider localization={heIL}>
+      <html
+        lang="he"
+        dir="rtl"
+        className={`${heebo.variable} h-full antialiased`}
+        suppressHydrationWarning
+      >
+        <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

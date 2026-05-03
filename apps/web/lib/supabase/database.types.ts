@@ -367,6 +367,7 @@ export type Database = {
           id: string
           name: string
           notes: string | null
+          org_id: string
           starts_on: string | null
           updated_at: string
         }
@@ -379,6 +380,7 @@ export type Database = {
           id?: string
           name: string
           notes?: string | null
+          org_id: string
           starts_on?: string | null
           updated_at?: string
         }
@@ -391,6 +393,7 @@ export type Database = {
           id?: string
           name?: string
           notes?: string | null
+          org_id?: string
           starts_on?: string | null
           updated_at?: string
         }

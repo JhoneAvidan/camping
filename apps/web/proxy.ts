@@ -1,13 +1,16 @@
-import type { NextRequest } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-import { updateSession } from "./lib/supabase/proxy";
+const isProtectedRoute = createRouteMatcher(["/trips(.*)", "/admin(.*)"]);
 
-export async function proxy(request: NextRequest) {
-  return updateSession(request);
-}
+export const proxy = clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) {
+    await auth.protect();
+  }
+});
 
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/(api|trpc)(.*)",
   ],
 };

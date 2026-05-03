@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -65,12 +66,10 @@ export async function generateMetadata({
 
 export default async function TripPage({ params }: TripPageProps) {
   const { id } = await params;
-  const supabase = await createClient();
+  const { userId } = await auth();
+  if (!userId) notFound();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) notFound();
+  const supabase = await createClient();
 
   // Single round-trip: trip + members + member profiles. RLS hides the trip
   // entirely if the user isn't a member, so a missing row == 404.
@@ -99,7 +98,7 @@ export default async function TripPage({ params }: TripPageProps) {
   if (error || !trip) notFound();
 
   const members = trip.trip_members ?? [];
-  const myMembership = members.find((m) => m.profile_id === user.id);
+  const myMembership = members.find((m) => m.profile_id === userId);
   if (!myMembership) notFound();
 
   const myRole = myMembership.role;
