@@ -1921,7 +1921,7 @@
         </div>
         <div class="shared-stat shared-stat-warn" id="statUnassigned" data-attention="false">
           <span class="shared-stat-num" data-stat="unassigned">0</span>
-          <span class="shared-stat-label">ללא שיוך</span>
+          <span class="shared-stat-label">לא שובצו</span>
         </div>
         <div class="shared-stat shared-stat-mine" id="statMine">
           <span class="shared-stat-num" data-stat="mine">0</span>
@@ -3074,14 +3074,37 @@
     if (m) m.classList.remove('open');
   }
 
+  function activeClaimFamilies(claims) {
+    return Object.keys(claims || {}).filter(f => FAMILIES[f]);
+  }
+
+  function isSharedItemUnassigned(item) {
+    return activeClaimFamilies(item?.claims).length === 0;
+  }
+
+  async function pruneStaleClaims() {
+    let changed = false;
+    for (const item of Object.values(state.shared || {})) {
+      const claims = item.claims;
+      if (!claims) continue;
+      for (const fam of Object.keys(claims)) {
+        if (!FAMILIES[fam]) {
+          delete claims[fam];
+          if (item.packed?.[fam]) delete item.packed[fam];
+          changed = true;
+        }
+      }
+    }
+    if (changed) await writeKey('shared', state.shared);
+  }
+
   function updateSharedStats(allItems) {
     const total = allItems.length;
     let unassigned = 0;
     let mine = 0;
     for (const [, item] of allItems) {
       const claims = item.claims || {};
-      const hasClaims = Object.keys(claims).length > 0;
-      if (!hasClaims) unassigned++;
+      if (isSharedItemUnassigned(item)) unassigned++;
       if (currentFamily && claims[currentFamily]) mine++;
     }
     const setNum = (key, val) => {
@@ -3119,12 +3142,12 @@
       }
       list.innerHTML = CATEGORIES.map(cat => {
         const rows = byCategory[cat.id];
-        const unassigned = rows.filter(([, it]) => !it.claims || !Object.keys(it.claims).length).length;
+        const unassigned = rows.filter(([, it]) => isSharedItemUnassigned(it)).length;
         const body = rows.length
           ? rows.map(([id, item]) => sharedItemHtml(id, item)).join('')
           : `<div class="category-empty" data-empty>גררו לכאן פריטים או הוסיפו חדשים</div>`;
         const unassignedBadge = unassigned > 0
-          ? `<span class="cat-count cat-count-warn" title="פריטים שעוד לא שובצו">${unassigned} ללא שיוך</span>`
+          ? `<span class="cat-count cat-count-warn" title="פריטים שעדיין לא שובצו לאף משפחה פעילה">${unassigned} לא שובצו</span>`
           : '';
         return `
           <div class="category-section" data-category="${cat.id}">
@@ -3200,7 +3223,7 @@
 
   function sharedItemHtml(id, item) {
     const claims = item.claims || {};
-    const claimedFamilies = Object.keys(claims).filter(f => FAMILIES[f]);
+    const claimedFamilies = activeClaimFamilies(claims);
     const myClaim = !!claims[currentFamily];
     const claimedCount = claimedFamilies.length;
 
@@ -3633,6 +3656,7 @@
     try {
       state = await fetchAll();
       await ensureSeed();
+      await pruneStaleClaims();
       await migrateClassifications();
       render();
       subscribeRealtime();
