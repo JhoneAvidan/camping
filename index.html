@@ -2417,7 +2417,10 @@
   async function ensureSeed() {
     const sharedEmpty = !state.shared || !Object.keys(state.shared).length;
     const personalEmpty = !state.personal || !Object.keys(state.personal).length;
-    if (!sharedEmpty && !personalEmpty) return;
+    if (!sharedEmpty && !personalEmpty) {
+      await syncMirroredPersonalLists();
+      return;
+    }
 
     if (sharedEmpty) {
       const seeded = {};
@@ -2453,6 +2456,35 @@
       });
       if (addedFamily) await writeKey('personal', state.personal);
     }
+    await syncMirroredPersonalLists();
+  }
+
+  // Keep Shagi personal list in sync with Avidan — same items, separate checkmarks.
+  async function syncMirroredPersonalLists() {
+    const source = state.personal?.avidan;
+    if (!source || !Object.keys(source).length) return;
+
+    if (!state.personal.shagi) state.personal.shagi = {};
+    const existingNames = new Set(
+      Object.values(state.personal.shagi).map(i => (i.name || '').trim()).filter(Boolean)
+    );
+    let changed = false;
+
+    for (const item of Object.values(source)) {
+      const name = (item.name || '').trim();
+      if (!name || existingNames.has(name)) continue;
+      const id = 'pr_' + Math.random().toString(36).slice(2, 9);
+      state.personal.shagi[id] = {
+        name,
+        checked: false,
+        addedBy: 'sync',
+        addedAt: item.addedAt || Date.now(),
+      };
+      existingNames.add(name);
+      changed = true;
+    }
+
+    if (changed) await writeKey('personal', state.personal);
   }
 
   // ─── Mutations (optimistic local update + write-back) ───
