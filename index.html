@@ -26,9 +26,7 @@
     --gold: #f59e0b;
 
     --avidan: #3b82f6;
-    --afsoa: #a855f7;
-    --weizman: #10b981;
-    --sofer: #ef4444;
+    --shagi: #d97706;
 
     --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
     --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
@@ -178,9 +176,7 @@
   }
   .me-avatar:active { transform: scale(0.94); }
   .me-avatar[data-family="avidan"]  { background: var(--avidan); }
-  .me-avatar[data-family="afsoa"]   { background: var(--afsoa); }
-  .me-avatar[data-family="weizman"] { background: var(--weizman); }
-  .me-avatar[data-family="sofer"]   { background: var(--sofer); }
+  .me-avatar[data-family="shagi"]   { background: var(--shagi); }
   .me-avatar-status {
     position: absolute;
     bottom: -2px;
@@ -224,9 +220,7 @@
     flex-shrink: 0;
   }
   .me-popover[data-family="avidan"]  .me-pop-dot { background: var(--avidan); }
-  .me-popover[data-family="afsoa"]   .me-pop-dot { background: var(--afsoa); }
-  .me-popover[data-family="weizman"] .me-pop-dot { background: var(--weizman); }
-  .me-popover[data-family="sofer"]   .me-pop-dot { background: var(--sofer); }
+  .me-popover[data-family="shagi"]   .me-pop-dot { background: var(--shagi); }
   .me-pop-sync {
     display: flex; align-items: center; gap: 8px;
     font-size: 12px; font-weight: 600;
@@ -400,7 +394,7 @@
   .trip-pill-ico { font-size: 14px; line-height: 1; }
   .trip-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
   .trip-pill-link.waze { background: #33ccff; color: #003a55; border-color: #1cb6ee; }
-  .trip-pill-link.whatsapp { background: #25d366; color: #fff; border-color: #1fbf5b; }
+  .trip-pill-link.parks { background: #2d6a4f; color: #fff; border-color: #1b4332; }
   .trip-pill-link:hover { filter: brightness(1.05); }
   .trip-pill-toggle {
     background: #fff;
@@ -713,9 +707,7 @@
     flex: 0 0 auto;
   }
   .byfam-dot[data-family="avidan"]  { background: var(--avidan); }
-  .byfam-dot[data-family="afsoa"]   { background: var(--afsoa); }
-  .byfam-dot[data-family="weizman"] { background: var(--weizman); }
-  .byfam-dot[data-family="sofer"]   { background: var(--sofer); }
+  .byfam-dot[data-family="shagi"]   { background: var(--shagi); }
   .byfam-name {
     flex: 1 1 auto;
     font-size: 14px; font-weight: 800;
@@ -828,9 +820,7 @@
     margin-inline-start: -10px;
   }
   .assignee-avatar[data-family="avidan"]  { background: linear-gradient(135deg, #60a5fa, var(--avidan)); }
-  .assignee-avatar[data-family="afsoa"]   { background: linear-gradient(135deg, #c084fc, var(--afsoa)); }
-  .assignee-avatar[data-family="weizman"] { background: linear-gradient(135deg, #34d399, var(--weizman)); }
-  .assignee-avatar[data-family="sofer"]   { background: linear-gradient(135deg, #f87171, var(--sofer)); }
+  .assignee-avatar[data-family="shagi"]   { background: linear-gradient(135deg, #fbbf24, var(--shagi)); }
   .assignee-avatar:hover {
     transform: translateY(-2px);
     z-index: 20 !important;
@@ -1502,9 +1492,7 @@
     box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
   }
   .assign-fam-avatar[data-family="avidan"]  { background: linear-gradient(135deg, #60a5fa, var(--avidan)); }
-  .assign-fam-avatar[data-family="afsoa"]   { background: linear-gradient(135deg, #c084fc, var(--afsoa)); }
-  .assign-fam-avatar[data-family="weizman"] { background: linear-gradient(135deg, #34d399, var(--weizman)); }
-  .assign-fam-avatar[data-family="sofer"]   { background: linear-gradient(135deg, #f87171, var(--sofer)); }
+  .assign-fam-avatar[data-family="shagi"]   { background: linear-gradient(135deg, #fbbf24, var(--shagi)); }
   .assign-fam-state {
     flex: 0 0 24px;
     text-align: center;
@@ -1883,26 +1871,24 @@
       <div class="trip-place">
         <span class="trip-place-ico" aria-hidden="true">📍</span>
         <span class="trip-place-text">
-          <span class="trip-place-name">חניון פתחת נחל אורן</span>
-          <span class="trip-place-meta"><strong>8</strong> מבוגרים · <strong>6</strong> ילדים</span>
+          <span class="trip-place-name">חניון לילה גן לאומי מצדה מערב – מחנה מצדה</span>
+          <span class="trip-place-meta"><strong>2</strong> משפחות · <strong>4</strong> מבוגרים</span>
         </span>
       </div>
       <div class="trip-actions">
         <a class="trip-pill trip-pill-link waze"
-           href="https://waze.com/ul/hsvbf5gqs2"
+           href="https://waze.com/ul?ll=31.3183791,35.3478874&navigate=yes"
            target="_blank" rel="noopener" title="פתח בוויז">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M20.7 12.6c.5-1 .8-2.1.8-3.2C21.5 5.3 17.4 2 12.4 2 7.7 2 3.8 4.9 3.3 8.7c-.3.2-.6.5-.8.9-.5.7-.5 1.7 0 2.4.3.5.8.8 1.4.9.4 2.5 2.4 4.6 5.3 5.6-.1.3-.1.6-.1.9 0 1.5 1.2 2.6 2.7 2.6s2.7-1.1 2.7-2.6c0-.1 0-.3-.1-.4h.6c0 .1-.1.3-.1.4 0 1.5 1.2 2.6 2.7 2.6 1.5 0 2.7-1.1 2.7-2.6 0-1-.6-1.9-1.4-2.3.7-.7 1.3-1.5 1.7-2.4l.1-.1zM9.5 9c.6 0 1.1.5 1.1 1.1S10.1 11.2 9.5 11.2 8.4 10.7 8.4 10.1 8.9 9 9.5 9zm5.5 0c.6 0 1.1.5 1.1 1.1s-.5 1.1-1.1 1.1-1.1-.5-1.1-1.1S14.4 9 15 9zm-3 7c-2 0-3.7-1.1-4.5-2.8-.1-.3.1-.6.4-.7.3-.1.6.1.7.4.6 1.3 1.9 2.1 3.4 2.1s2.8-.8 3.4-2.1c.1-.3.4-.4.7-.4.3.1.5.4.4.7C15.7 14.9 14 16 12 16z"/>
           </svg>
           Waze
         </a>
-        <a class="trip-pill trip-pill-link whatsapp"
-           href="https://chat.whatsapp.com/CDnEhs8F5oY2YDMx4BtuQX"
-           target="_blank" rel="noopener" title="קבוצת וואטסאפ">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.3 5.2 4.5 3.1 1.2 3.1.8 3.7.8.6-.1 1.7-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 22c-1.7 0-3.3-.4-4.7-1.2L2 22l1.3-5.1C2.5 15.4 2 13.7 2 12 2 6.5 6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z"/>
-          </svg>
-          וואטסאפ
+        <a class="trip-pill trip-pill-link parks"
+           href="https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9E%D7%A6%D7%93%D7%94-%D7%9E%D7%A2%D7%A8%D7%91-%D7%9E%D7%97%D7%A0%D7%94-%D7%9E%D7%A6%D7%93%D7%94/"
+           target="_blank" rel="noopener" title="פרטים ברשות הטבע והגנים">
+          <span class="trip-pill-ico" aria-hidden="true">ℹ️</span>
+          פרטים
         </a>
         <button class="trip-pill trip-pill-toggle" id="tripMapToggle" type="button" aria-expanded="false" aria-controls="tripMap">
           <span class="trip-pill-ico" aria-hidden="true">🗺</span>
@@ -2011,9 +1997,7 @@
         <select class="add-select" id="adminFilterFamily">
           <option value="">כל המשפחות</option>
           <option value="avidan">משפחת אבידן</option>
-          <option value="afsoa">משפחת אפסוה-שמעוני</option>
-          <option value="weizman">משפחת ויצמן</option>
-          <option value="sofer">משפחת סופר</option>
+          <option value="shagi">משפחת שגיא</option>
         </select>
         <span class="label" style="margin-right:auto;">
           <span id="adminCount">0</span> רשומות
@@ -2041,10 +2025,8 @@
 
   // ─── Constants ───
   const FAMILIES = {
-    avidan:   { id: 'avidan',   label: 'משפחת אבידן',           short: 'אבידן' },
-    afsoa:    { id: 'afsoa',    label: 'משפחת אפסוה-שמעוני',  short: 'אפסוה-שמעוני' },
-    weizman:  { id: 'weizman',  label: 'משפחת ויצמן',          short: 'ויצמן' },
-    sofer:    { id: 'sofer',    label: 'משפחת סופר',           short: 'סופר' },
+    avidan: { id: 'avidan', label: 'משפחת אבידן', short: 'אבידן' },
+    shagi:  { id: 'shagi',  label: 'משפחת שגיא',   short: 'שגיא' },
   };
 
   const CATEGORIES = [
@@ -2119,26 +2101,18 @@
   // ─── Auth (phone hashes — SHA-256 of phone digits + SALT) ───
   const SALT = 'camping-app-2026-yoni';
   // Admin hashes — only these phones see the admin dashboard.
-  // 89fea6...5117 = 0546677029 (yoni)
+  // 89fea6...5117 = 0546677029 (יונתן)
   const ADMIN_HASHES = new Set([
     '89fea6124e0c3974fd54bea855b9110b0cc942bf84cd8d06217bbc3968885117',
   ]);
   const PHONE_HASHES = {
     avidan: [
-      '89fea6124e0c3974fd54bea855b9110b0cc942bf84cd8d06217bbc3968885117',
-      'd5285c148ebba9b6b1db8f13cefb8b973e2b71ec60e5a14d8b983b31fd13a11b',
+      '89fea6124e0c3974fd54bea855b9110b0cc942bf84cd8d06217bbc3968885117', // יונתן
+      'd5285c148ebba9b6b1db8f13cefb8b973e2b71ec60e5a14d8b983b31fd13a11b', // חלי
     ],
-    afsoa: [
-      '39fb7d97da1d0ca9c4954711d191e2e92c8b9560681a29bc9103c0207e3064c4',
-      'ddfcc31a79370072ea57360c83fb6e097c43e138e759de867846bd50d9052638',
-    ],
-    weizman: [
-      '3ad7cf84f495b4086fd2af04e031e6fdb5b6160a8047cbd23ba0470f6df16a52',
-      '1dfc7d062b5e7cf1260a325e0e24c0d8097606f48bfaf5ad9a11907ee730389f',
-    ],
-    sofer: [
-      '2f482fc3cda356b2bbd983f42c8bb20bf70de94cf730920582263f53bf7cdcab',
-      '90e5933da05d9ea5697c66e96341de0c16cfa42226616e77b91d7e4ab6933a4f',
+    shagi: [
+      '0cee3bcaa841db564d1104a15bf69006216bdc179505ce7e11d31eee81b93868', // חן
+      'd55c16ab13df81dbd1d7dcb136437bc831e9a63a528b9607d33654b098da94fa', // טל
     ],
   };
 
@@ -2160,6 +2134,12 @@
   let state = { shared: {}, personal: {}, login_log: { entries: [] }, activity_log: { entries: [] }, feature_requests: {} };
   let currentFamily = localStorage.getItem('camping.family') || null;
   let isAdmin = localStorage.getItem('camping.admin') === '1';
+  if (currentFamily && !FAMILIES[currentFamily]) {
+    localStorage.removeItem('camping.family');
+    localStorage.removeItem('camping.admin');
+    currentFamily = null;
+    isAdmin = false;
+  }
   let currentTab = 'shared';
   let adminFilterFamily = '';
   let adminView = 'logins'; // 'logins' | 'activity'
@@ -2337,7 +2317,7 @@
     const label = $('tripMapToggleLabel');
     if (!toggle || !map) return;
     const MAP_SRC = 'https://maps.google.com/maps?q=' +
-      encodeURIComponent('חניון פתחת נחל אורן') +
+      encodeURIComponent('חניון לילה גן לאומי מצדה מערב מחנה מצדה') +
       '&t=&z=14&ie=UTF8&iwloc=&output=embed';
     toggle.addEventListener('click', () => {
       const isOpen = map.classList.toggle('open');
@@ -2459,6 +2439,19 @@
       });
       state.personal = seeded;
       await writeKey('personal', seeded);
+    } else {
+      let addedFamily = false;
+      Object.keys(FAMILIES).forEach((fam) => {
+        if (!state.personal[fam] || !Object.keys(state.personal[fam]).length) {
+          state.personal[fam] = {};
+          SEED_PERSONAL.forEach((name) => {
+            const id = 'pr_' + Math.random().toString(36).slice(2, 9);
+            state.personal[fam][id] = { name, checked: false, addedBy: 'system', addedAt: Date.now() };
+          });
+          addedFamily = true;
+        }
+      });
+      if (addedFamily) await writeKey('personal', state.personal);
     }
   }
 

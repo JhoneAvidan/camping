@@ -122,7 +122,7 @@ per_family as (
       )
     ) as fam_items
   from items
-  cross join (values ('avidan'), ('afsoa'), ('weizman'), ('sofer')) as f(fam)
+  cross join (values ('avidan'), ('shagi')) as f(fam)
   group by fam
 )
 insert into public.camping_data (key, value, updated_at)
@@ -135,7 +135,7 @@ on conflict (key) do update
   set value = excluded.value, updated_at = excluded.updated_at;
 
 -- 3. Sanity check --------------------------------------------------------------
--- Should return: 'shared' with 25 items, 'personal' with 4 family keys × 20 items.
+-- Should return: 'shared' with 25 items, 'personal' with 2 family keys × 20 items.
 select
   key,
   case key
