@@ -1045,10 +1045,6 @@
     padding: 3px 9px; border-radius: 999px;
     min-width: 22px; text-align: center;
     flex-shrink: 0;
-    white-space: nowrap;
-  }
-  .category-header .cat-count-total {
-    font-variant-numeric: tabular-nums;
   }
   .category-header .cat-count-warn {
     margin-inline-start: 0;
@@ -1611,7 +1607,7 @@
     }
     #sharedList > .category-section .category-header .cat-emoji { font-size: 19px; line-height: 1; }
     #sharedList > .category-section .category-header .cat-label { font-weight: 800; letter-spacing: 0.1px; }
-    #sharedList > .category-section .category-header .cat-count-total {
+    #sharedList > .category-section .category-header .cat-count {
       background: var(--cat-color, var(--forest));
       color: white;
       font-variant-numeric: tabular-nums;
@@ -3158,7 +3154,7 @@
             <div class="category-header">
               <span class="cat-emoji">${cat.emoji}</span>
               <span class="cat-label">${escapeHtml(cat.label)}</span>
-              <span class="cat-count cat-count-total" title="סה״כ פריטים בקטגוריה זו">${rows.length} סה״כ</span>
+              <span class="cat-count">${rows.length}</span>
               ${unassignedBadge}
             </div>
             <div class="category-body" data-category-body="${cat.id}">${body}</div>
