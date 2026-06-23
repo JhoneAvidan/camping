@@ -253,7 +253,7 @@
   }
   .me-popover .me-pop-logout:hover { border-color: #b91c1c; color: #b91c1c; background: #fef2f2; }
 
-  /* ───────── Countdown to Friday 16:00 ───────── */
+  /* ───────── Countdown to Friday 15:30 ───────── */
   .countdown {
     position: relative; z-index: 1;
     margin-top: 12px;
@@ -1834,7 +1834,7 @@
       <div class="hero-icon">🏕️</div>
       <div>
         <h1>קמפינג 2026</h1>
-        <div class="subtitle">מתכנסים מחר ב־16:00</div>
+        <div class="subtitle" id="meetingSubtitle">מתכנסים ביום שישי ב־15:30 בחניון מצדה</div>
       </div>
     </div>
     <div class="me-avatar-wrap">
@@ -3682,18 +3682,31 @@
     enterApp(currentFamily, 'auto');
   }
 
-  // ── Countdown to next Friday 16:00 ──
-  function nextFriday16() {
+  // ── Countdown to next Friday 15:30 ──
+  function nextMeetingTime() {
     const now = new Date();
     const t = new Date(now);
-    t.setHours(16, 0, 0, 0);
+    t.setHours(15, 30, 0, 0);
     const offset = (5 - now.getDay() + 7) % 7;
     t.setDate(t.getDate() + offset);
     if (t.getTime() <= now.getTime()) t.setDate(t.getDate() + 7);
     return t;
   }
+  function updateMeetingSubtitle() {
+    const el = $('meetingSubtitle');
+    if (!el) return;
+    const target = nextMeetingTime();
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const targetDay = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+    const diffDays = Math.round((targetDay - today) / 86400000);
+    let when = 'ביום שישי';
+    if (diffDays === 0) when = 'היום';
+    else if (diffDays === 1) when = 'מחר';
+    el.textContent = `מתכנסים ${when} ב־15:30 בחניון מצדה`;
+  }
   function tickCountdown() {
-    const target = nextFriday16();
+    const target = nextMeetingTime();
     const diff = Math.max(0, target - new Date());
     const d = Math.floor(diff / 86400000);
     const h = Math.floor((diff % 86400000) / 3600000);
@@ -3702,8 +3715,9 @@
     const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = String(n).padStart(2, '0'); };
     set('cdDays', d); set('cdHrs', h); set('cdMins', m); set('cdSecs', s);
   }
+  updateMeetingSubtitle();
   tickCountdown();
-  setInterval(tickCountdown, 1000);
+  setInterval(() => { updateMeetingSubtitle(); tickCountdown(); }, 1000);
 </script>
 
 <!-- ═════════ Shared item action sheet ═════════ -->
