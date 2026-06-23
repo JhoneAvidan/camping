@@ -1259,86 +1259,334 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* ───────── Login Overlay — Mobile First ───────── */
+  /* ───────── Login / Landing Banner ───────── */
   .login-overlay {
     position: fixed; inset: 0;
-    background: linear-gradient(135deg, #1e6b4d 0%, #0d3a26 100%);
-    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(180deg, #f7f1e3 0%, #ebe3d4 45%, #e4d9c6 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
     padding:
-      calc(20px + var(--safe-top))
-      calc(20px + var(--safe-r))
-      calc(20px + var(--safe-bot))
-      calc(20px + var(--safe-l));
+      calc(12px + var(--safe-top))
+      calc(12px + var(--safe-r))
+      calc(12px + var(--safe-bot))
+      calc(12px + var(--safe-l));
     z-index: 100;
     min-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .login-overlay::before {
-    content: ''; position: absolute; inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 25%, rgba(245, 158, 11, 0.18) 0%, transparent 40%),
-      radial-gradient(circle at 80% 75%, rgba(232, 93, 4, 0.12) 0%, transparent 45%);
-    pointer-events: none;
+  .landing-banner {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
   }
-  .login-card {
-    background: var(--paper);
-    border-radius: var(--radius-xl);
-    padding: 32px 24px 28px;
-    max-width: 400px; width: 100%;
-    box-shadow: var(--shadow-xl);
+  .landing-main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+  }
+  .landing-content {
+    order: 1;
     text-align: center;
-    position: relative; z-index: 1;
+    padding: 8px 4px 0;
   }
-  .login-icon { font-size: 56px; margin-bottom: 8px; }
-  .login-card h1 {
-    font-size: clamp(22px, 6vw, 28px);
+  .landing-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--forest-deep);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 14px rgba(19, 78, 53, 0.22);
+  }
+  .landing-content h1 {
+    font-size: clamp(26px, 7vw, 42px);
     font-weight: 800;
     color: var(--forest-deep);
-    margin-bottom: 6px;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
   }
-  .login-card .login-subtitle {
+  .landing-lead {
     color: var(--ink-soft);
-    font-size: 14px; font-weight: 500;
-    margin-bottom: 22px;
-    line-height: 1.4;
+    font-size: clamp(14px, 3.8vw, 17px);
+    line-height: 1.55;
+    max-width: 34em;
+    margin: 0 auto 20px;
+    font-weight: 500;
+  }
+  .landing-form {
+    max-width: 360px;
+    margin: 0 auto 14px;
+    width: 100%;
   }
   .login-input {
     width: 100%;
-    border: 2px solid var(--line);
+    border: 2px solid rgba(30, 107, 77, 0.18);
     border-radius: var(--radius-md);
     padding: 14px 16px;
     min-height: 52px;
     font-family: inherit; font-size: 18px;
     text-align: center;
-    background: #fafaf9;
+    background: #fff;
     direction: ltr;
     letter-spacing: 1px;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm);
   }
-  .login-input:focus { outline: none; border-color: var(--forest); background: white; }
-  .login-btn {
+  .login-input:focus {
+    outline: none;
+    border-color: var(--forest);
+    box-shadow: 0 0 0 3px rgba(30, 107, 77, 0.12);
+  }
+  .landing-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 360px;
+    margin: 0 auto;
     width: 100%;
-    margin-top: 12px;
-    padding: 14px 20px;
-    min-height: 52px;
-    background: var(--forest);
-    color: white; border: none;
-    border-radius: var(--radius-md);
-    font-family: inherit; font-size: 17px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
   }
-  .login-btn:hover { background: var(--forest-deep); }
-  .login-btn:active { transform: scale(0.98); }
+  .landing-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    border: none;
+  }
+  .landing-btn.primary {
+    background: var(--forest-deep);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(19, 78, 53, 0.28);
+  }
+  .landing-btn.primary:hover { background: #0f3d2a; }
+  .landing-btn.primary:active { transform: scale(0.98); }
+  .landing-btn.ghost {
+    background: #fff;
+    color: var(--forest-deep);
+    border: 2px solid rgba(30, 107, 77, 0.22);
+    box-shadow: var(--shadow-sm);
+  }
+  .landing-btn.ghost:hover { border-color: var(--forest); background: #fafaf9; }
   .login-error {
-    margin-top: 12px;
+    margin-top: 10px;
     color: #b91c1c;
-    font-size: 13px; font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
     min-height: 20px;
+    text-align: center;
   }
   .login-hint {
-    margin-top: 18px;
+    margin-top: 12px;
     color: var(--ink-dim);
     font-size: 12px;
+    text-align: center;
+  }
+  .landing-visual {
+    order: 2;
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    background: #ebe3d4;
+    min-height: 220px;
+  }
+  .landing-illustration {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .landing-widgets {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .landing-widget {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(8px);
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    font-size: 11px;
+    color: var(--ink);
+  }
+  .landing-widget-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--forest-deep);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .landing-widget-countdown {
+    top: 8%;
+    left: 4%;
+    width: min(200px, 46%);
+  }
+  .landing-cd-units {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+  .landing-cd-unit {
+    text-align: center;
+    background: #f5efe6;
+    border-radius: 8px;
+    padding: 5px 2px;
+  }
+  .landing-cd-num {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--forest-deep);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .landing-cd-lbl {
+    font-size: 9px;
+    color: var(--ink-soft);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .landing-widget-checklist {
+    bottom: 18%;
+    left: 6%;
+    width: min(168px, 40%);
+  }
+  .landing-check-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+  .landing-check-item.done { color: var(--forest); }
+  .landing-check-item .chk {
+    width: 14px; height: 14px;
+    border-radius: 4px;
+    border: 1.5px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; flex-shrink: 0;
+  }
+  .landing-check-item.done .chk {
+    background: var(--forest);
+    border-color: var(--forest);
+    color: #fff;
+  }
+  .landing-widget-tasks {
+    top: 10%;
+    right: 4%;
+    width: min(150px, 36%);
+  }
+  .landing-task-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--ink-soft);
+  }
+  .landing-task-row.done { color: var(--forest); }
+  .landing-widget-menu {
+    bottom: 12%;
+    right: 6%;
+    width: min(140px, 34%);
+  }
+  .landing-menu-line {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .landing-features {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(31, 41, 55, 0.08);
+    border-radius: var(--radius-lg);
+    padding: 10px 8px;
+    box-shadow: var(--shadow-sm);
+  }
+  .landing-feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    line-height: 1.2;
+    padding: 4px 2px;
+  }
+  .landing-feature-ico { font-size: 16px; line-height: 1; }
+
+  @media (min-width: 768px) {
+    .login-overlay { padding: 20px 24px; justify-content: center; }
+    .landing-main {
+      flex-direction: row;
+      align-items: center;
+      gap: 28px;
+    }
+    .landing-content {
+      order: 0;
+      flex: 0 0 42%;
+      text-align: start;
+      padding: 12px 8px;
+    }
+    .landing-lead { margin-inline: 0; }
+    .landing-form, .landing-actions { margin-inline: 0; }
+    .landing-visual {
+      order: 1;
+      flex: 1;
+      min-height: 380px;
+    }
+    .landing-widget { font-size: 12px; padding: 12px 14px; }
+    .landing-widget-countdown { top: 10%; left: 6%; width: 210px; }
+    .landing-cd-num { font-size: 18px; }
+    .landing-features { gap: 10px; padding: 14px 16px; }
+    .landing-feature { font-size: 11px; }
+    .landing-feature-ico { font-size: 20px; }
+  }
+
+  @media (max-width: 767px) {
+    .landing-widgets { display: none; }
+    .landing-visual { min-height: 0; max-height: 42vh; }
+    .landing-features {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .landing-feature:nth-child(4),
+    .landing-feature:nth-child(5) { display: none; }
   }
 
   /* ───────── Edit Modal — Bottom Sheet (Mobile) ───────── */
@@ -1811,18 +2059,63 @@
 </head>
 <body>
 
-<!-- ═════════ Login overlay ═════════ -->
+<!-- ═════════ Login / Landing Banner ═════════ -->
 <div class="login-overlay" id="loginOverlay">
-  <div class="login-card">
-    <div class="login-icon">🏕️</div>
-    <h1>קמפינג 2026</h1>
-    <div class="login-subtitle">הקלידו את מספר הטלפון שלכם כדי להיכנס</div>
-    <form id="loginForm" autocomplete="off">
-      <input class="login-input" id="loginInput" type="tel" inputmode="numeric" placeholder="05XXXXXXXX" maxlength="10" autofocus />
-      <button class="login-btn" type="submit">כניסה</button>
-      <div class="login-error" id="loginError"></div>
-    </form>
-    <div class="login-hint">רק בני המשפחות יכולים להיכנס 🌲</div>
+  <div class="landing-banner">
+    <div class="landing-main">
+      <div class="landing-content">
+        <div class="landing-pill"><span aria-hidden="true">🏕️</span> הקמפינג המשפחתי מתחיל כאן</div>
+        <h1>מתכוננים לקמפינג<br>בלי לשכוח כלום</h1>
+        <p class="landing-lead">רשימות ציוד, חלוקת משימות, תפריט, ניווט וספירה לאחור — הכל במקום אחד.</p>
+        <form class="landing-form" id="loginForm" autocomplete="off">
+          <input class="login-input" id="loginInput" type="tel" inputmode="numeric" placeholder="05XXXXXXXX" maxlength="10" autofocus />
+          <div class="landing-actions">
+            <button class="landing-btn primary" type="submit">התחילו להתארגן <span aria-hidden="true">←</span></button>
+            <button class="landing-btn ghost" type="button" id="loginFocusBtn">📋 לצ׳קליסט המלא</button>
+          </div>
+          <div class="login-error" id="loginError"></div>
+        </form>
+        <div class="login-hint">רק בני המשפחות יכולים להיכנס · מצדה מערב 🌲</div>
+      </div>
+      <div class="landing-visual">
+        <img class="landing-illustration" src="banner-camping.png" alt="משפחה מתכוננת לקמפינג ליד האוהל" width="800" height="500" />
+        <div class="landing-widgets" aria-hidden="true">
+          <div class="landing-widget landing-widget-countdown">
+            <div class="landing-widget-title">⏱ יוצאים לקמפינג בעוד</div>
+            <div class="landing-cd-units">
+              <div class="landing-cd-unit"><div class="landing-cd-num" id="loginCdDays">00</div><div class="landing-cd-lbl">ימים</div></div>
+              <div class="landing-cd-unit"><div class="landing-cd-num" id="loginCdHrs">00</div><div class="landing-cd-lbl">שעות</div></div>
+              <div class="landing-cd-unit"><div class="landing-cd-num" id="loginCdMins">00</div><div class="landing-cd-lbl">דקות</div></div>
+              <div class="landing-cd-unit"><div class="landing-cd-num" id="loginCdSecs">00</div><div class="landing-cd-lbl">שניות</div></div>
+            </div>
+          </div>
+          <div class="landing-widget landing-widget-checklist">
+            <div class="landing-widget-title">📋 צ׳קליסט ציוד</div>
+            <div class="landing-check-item done"><span class="chk">✓</span> אוהל</div>
+            <div class="landing-check-item done"><span class="chk">✓</span> מזרן</div>
+            <div class="landing-check-item done"><span class="chk">✓</span> פנסים</div>
+            <div class="landing-check-item"><span class="chk"></span> ערכת בישול</div>
+          </div>
+          <div class="landing-widget landing-widget-tasks">
+            <div class="landing-widget-title">👥 חלוקת משימות</div>
+            <div class="landing-task-row done"><span>אבידן</span><span>✓</span></div>
+            <div class="landing-task-row done"><span>שגיא</span><span>✓</span></div>
+          </div>
+          <div class="landing-widget landing-widget-menu">
+            <div class="landing-widget-title">🍽 תפריט קמפינג</div>
+            <div class="landing-menu-line">3 ארוחות עיקריות</div>
+            <div class="landing-menu-line">2 ארוחות קלות</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="landing-features" aria-hidden="true">
+      <div class="landing-feature"><span class="landing-feature-ico">📋</span><span>רשימות חכמות</span></div>
+      <div class="landing-feature"><span class="landing-feature-ico">⏱</span><span>ספירה לאחור</span></div>
+      <div class="landing-feature"><span class="landing-feature-ico">📍</span><span>ניווט ויעדים</span></div>
+      <div class="landing-feature"><span class="landing-feature-ico">🍽</span><span>תפריט מסודר</span></div>
+      <div class="landing-feature"><span class="landing-feature-ico">👥</span><span>חלוקת משימות</span></div>
+    </div>
   </div>
 </div>
 
@@ -3701,6 +3994,13 @@
     enterApp(fam, 'phone', ADMIN_HASHES.has(hash));
   });
 
+  $('loginFocusBtn')?.addEventListener('click', () => {
+    const input = $('loginInput');
+    if (!input) return;
+    input.focus();
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
   // Auto-login if we already have a remembered family
   if (currentFamily && FAMILIES[currentFamily]) {
     enterApp(currentFamily, 'auto');
@@ -3738,6 +4038,7 @@
     const s = Math.floor((diff % 60000) / 1000);
     const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = String(n).padStart(2, '0'); };
     set('cdDays', d); set('cdHrs', h); set('cdMins', m); set('cdSecs', s);
+    set('loginCdDays', d); set('loginCdHrs', h); set('loginCdMins', m); set('loginCdSecs', s);
   }
   updateMeetingSubtitle();
   tickCountdown();
